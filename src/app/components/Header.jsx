@@ -1,30 +1,44 @@
-// src/app/components/Header.jsx
 'use client';
-import { FiMenu, FiBell } from "react-icons/fi";
-import useScreenSize from "../hooks/useScreenSize";
+import { FiMenu, FiX, FiBell } from "react-icons/fi";
 import Link from 'next/link';
+import { useState } from 'react';
+import { Menu } from './Menu';
 
-export const Header = () => {
-  const isLargeScreen = useScreenSize(576);
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header
-      className="sticky top-0 z-50 flex items-center justify-between px-4 py-2 bg-[#e6ecf4] min-h-12"
-    >
-      {/* Left: Hamburger menu always visible */}
-      <div className="flex-1 flex items-center">
-        <FiMenu className="text-2xl text-gray-700" />
-      </div>
-      {/* Center: Website name, always centered */}
-      <h1 className="flex-1 text-center text-lg font-bold text-blue-600">
-        Bindass Online
-      </h1>
-      {/* Right: Notification icon always visible */}
-      <div className="flex-1 flex items-center justify-end">
-        <Link href="notificaton">
-          <FiBell className="text-2xl text-gray-700 cursor-pointer" />
+    <>
+      <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-[#e6ecf4] shadow-sm max-w-[480px] w-full mx-auto">
+        {/* Menu Toggle Button */}
+        <button 
+          className="p-2 rounded-md hover:bg-gray-200 transition-colors"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? (
+            <FiX className="text-xl text-gray-700" />
+          ) : (
+            <FiMenu className="text-xl text-gray-700" />
+          )}
+        </button>
+
+        {/* Center Logo */}
+        <div className="absolute left-0 right-0 mx-auto w-fit">
+          <h1 className="text-lg font-bold text-blue-600">Binadda</h1>
+        </div>
+
+        {/* Notification Bell */}
+        <Link 
+          href="/notification" 
+          className="p-2 rounded-md hover:bg-gray-200 transition-colors"
+          aria-label="Notifications"
+        >
+          <FiBell className="text-xl text-gray-700" />
         </Link>
-      </div>
-    </header>
+      </header>
+
+      <Menu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+    </>
   );
-};
+}
