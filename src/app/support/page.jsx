@@ -1,14 +1,29 @@
-"use client";
-import React from 'react';
-import { FiMail, FiPhone, FiMessageCircle, FiSearch, FiClock, FiRefreshCw, FiHelpCircle } from 'react-icons/fi';
+'use client';
+import React, { useEffect, useState } from 'react';
+import {
+  FiMail,
+  FiPhone,
+  FiMessageCircle,
+  FiSearch,
+  FiClock,
+  FiRefreshCw,
+  FiHelpCircle,
+} from 'react-icons/fi';
 import { RiCustomerService2Fill } from 'react-icons/ri';
 
 export default function SupportPage() {
+  const [today, setToday] = useState('');
+
+  useEffect(() => {
+    // Ensures the date is only set on client side to avoid hydration mismatch
+    setToday(new Date().toLocaleDateString());
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
         
-        {/* Header with gradient */}
+        {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -23,7 +38,7 @@ export default function SupportPage() {
           <p className="text-sm opacity-90 mt-2">We're here to help you 7 days a week</p>
         </div>
 
-        {/* Search bar */}
+        {/* Search */}
         <div className="p-5 pb-3">
           <div className="relative">
             <FiSearch className="absolute left-4 top-3.5 text-gray-400" />
@@ -35,12 +50,14 @@ export default function SupportPage() {
           </div>
         </div>
 
-        {/* FAQ quick links */}
+        {/* FAQ Tags */}
         <div className="px-5 py-3">
-          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Common Questions</h3>
+          <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            Common Questions
+          </h3>
           <div className="flex flex-wrap gap-2">
             {['Account Issues', 'Payment Help', 'Game Rules', 'Withdrawals'].map((item) => (
-              <button 
+              <button
                 key={item}
                 className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition"
               >
@@ -52,7 +69,7 @@ export default function SupportPage() {
 
         {/* Support Options */}
         <div className="p-5 pt-2 space-y-4">
-          {/* Email Support */}
+          {/* Email */}
           <div className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 flex items-start gap-4 transition cursor-pointer">
             <div className="p-3 rounded-full bg-green-100 text-green-600 flex-shrink-0">
               <FiMail className="w-5 h-5" />
@@ -64,7 +81,7 @@ export default function SupportPage() {
             </div>
           </div>
 
-          {/* Phone Support */}
+          {/* Phone */}
           <div className="bg-gray-50 hover:bg-gray-100 rounded-xl p-4 flex items-start gap-4 transition cursor-pointer">
             <div className="p-3 rounded-full bg-blue-100 text-blue-600 flex-shrink-0">
               <FiPhone className="w-5 h-5" />
@@ -72,7 +89,7 @@ export default function SupportPage() {
             <div>
               <h3 className="text-base font-semibold text-gray-800">Phone Support</h3>
               <p className="text-sm text-gray-600 mt-1">Speak directly with our support agents</p>
-              <p className="text-sm text-blue-600 font-medium mt-2">+91 77889 94455</p>
+              <p className="text-sm text-blue-600 font-medium mt-2">+91 77889 94454</p>
             </div>
           </div>
 
@@ -116,7 +133,7 @@ export default function SupportPage() {
         {/* Footer */}
         <div className="bg-gray-50 p-4 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
           <FiRefreshCw className="w-3 h-3" />
-          <span>Last updated: {new Date().toLocaleDateString()}</span>
+          <span>Last updated: {today}</span>
         </div>
       </div>
     </div>

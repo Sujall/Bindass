@@ -14,27 +14,39 @@ const Banner = () => {
   ];
 
   return (
-    <div className="w-full px-1">
-      <div className="w-full max-w-[480px] mx-auto h-72 relative rounded-[16px] overflow-hidden">
+    <div className="w-full px-2 py-2 bg-gray-50">
+      <div className="w-full max-w-4xl mx-auto h-80 md:h-72 relative rounded-xl overflow-hidden shadow-lg">
         <Swiper
           spaceBetween={0}
           centeredSlides={true}
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          pagination={{ clickable: true }}
+          autoplay={{ 
+            delay: 3500, 
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true 
+          }}
+          pagination={{ 
+            clickable: true,
+            dynamicBullets: true,
+            bulletClass: "swiper-pagination-bullet !bg-gray-300 !opacity-100",
+            bulletActiveClass: "!bg-white"
+          }}
           modules={[Autoplay, Pagination]}
           className="h-full"
+          loop={true}
         >
           {bannerSlides.map((slide) => (
             <SwiperSlide key={slide.id}>
-              <div className="relative w-full h-72">
+              <div className="relative w-full h-full transition-transform duration-500 hover:scale-105">
                 <Image
                   src={slide.image}
                   alt={`Slide ${slide.id}`}
                   fill
-                  sizes="(max-width: 480px) 100vw"
-                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
+                  className="object-cover transition-opacity duration-300"
                   priority
+                  quality={100}
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
               </div>
             </SwiperSlide>
           ))}

@@ -69,9 +69,9 @@ const Grid = () => {
     return (
       <div
         key={item.id}
-        className="bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden"
+        className="bg-white border border-gray-200 rounded-lg overflow-hidden"
       >
-        <div className="relative w-full aspect-[4/2]">
+        <div className="relative w-full aspect-[4/2.2]">
           <Image
             src={item.image}
             alt={item.title}
@@ -81,58 +81,55 @@ const Grid = () => {
             priority={item.id <= 2}
           />
         </div>
-        <div className="p-4 space-y-2">
-          <h3 className="font-bold text-lg text-gray-900">{item.title}</h3>
+        <div className="p-4 space-y-3">
+          <h3 className="font-semibold text-xl text-gray-900">{item.title}</h3>
           {item.description && (
-            <p className="text-sm text-gray-700 font-medium">
-              {item.description}
-            </p>
+            <p className="text-gray-600 text-base">{item.description}</p>
           )}
 
-          <div className="flex items-center justify-between text-sm font-semibold mt-2">
-            <div className="text-gray-800 flex items-center gap-1">
-              <FaUsers className="text-gray-600" />
+          <div className="flex items-center justify-between text-sm mt-2">
+            <div className="text-gray-700 flex items-center gap-1.5">
+              <FaUsers className="text-gray-500" />
               {current}/{total}
             </div>
             <span
-              className={`px-2 py-0.5 rounded-full text-xs ${
+              className={`px-2 py-1 rounded-md text-xs font-medium ${
                 isAvailable
-                  ? "text-green-700 bg-green-100"
-                  : "text-red-700 bg-red-100"
+                  ? "text-green-800 bg-green-50"
+                  : "text-red-800 bg-red-50"
               }`}
             >
-              {isAvailable ? "AVAILABLE" : "FULL"}
+              {isAvailable ? "Available" : "Full"}
             </span>
           </div>
 
-          <div className="w-full bg-gray-200 h-2 rounded-full mt-1">
+          <div className="w-full bg-gray-100 h-1.5 rounded-full mt-1">
             <div
               className={`h-full rounded-full ${
-                item.entryFee.includes("19") ? "bg-green-500" : "bg-blue-700"
+                item.entryFee <= "29" ? "bg-green-500" : "bg-blue-600"
               }`}
               style={{ width: `${percentage}%` }}
             />
           </div>
 
-          <div className="flex items-center space-x-2 text-sm mt-2">
-            <span className="text-gray-700 font-semibold">Entry fee:</span>
-            <div className="flex items-center">
-              <FaRupeeSign className="text-gray-600" />
-            <span className="text-gray-700 font-semibold">{item.entryFee}</span>
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center text-gray-700">
+              <FaRupeeSign className="mr-1 text-sm" />
+              <span className="font-medium">{item.entryFee}</span>
             </div>
           </div>
 
           <Link
             href={`/giveaway/${item.id}`}
-            className={`block w-full text-center text-white font-bold py-2 mt-3 rounded-lg transition duration-200 ${
+            className={`block w-full text-center font-medium py-2.5 mt-3 rounded-md ${
               isAvailable
-                ? "bg-gray-900 hover:bg-black"
-                : "bg-gray-500 cursor-not-allowed"
+                ? "bg-gray-900 text-white hover:bg-black"
+                : "bg-gray-200 text-gray-600 cursor-not-allowed"
             }`}
             aria-disabled={!isAvailable}
             tabIndex={!isAvailable ? -1 : undefined}
           >
-            {isAvailable ? "Join Giveaway" : "Giveaway Full"}
+            {isAvailable ? "Join Now" : "Closed"}
           </Link>
         </div>
       </div>
@@ -140,21 +137,25 @@ const Grid = () => {
   };
 
   return (
-    <div className="max-w-[480px] mx-auto px-4 py-6">
+    <div className="max-w-2xl mx-auto px-4 py-6">
       {/* iPhone Giveaways */}
-      <div className="space-y-6">{giveaways.map(renderGiveawayCard)}</div>
+      <div className="space-y-5">{giveaways.map(renderGiveawayCard)}</div>
 
       {/* Cash Giveaways */}
-      <div className="mt-12 space-y-6">
-        <h2 className="text-2xl font-bold text-gray-900">💵 Cash Giveaways</h2>
+      <div className="mt-10 space-y-5">
+        <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+          💵 Cash Giveaways
+        </h2>
         {cashGiveaways.map(renderGiveawayCard)}
       </div>
 
       {/* View All Giveaways Button */}
       <div className="mt-8 flex justify-center">
-        <button className="bg-white text-gray-900 font-bold py-3 px-6 rounded-lg border-2 border-gray-200 hover:bg-gray-100 transition duration-200">
-          View All Giveaways
-        </button>
+        <Link href="/giveawaypage" passHref>
+          <button className="bg-white text-gray-900 font-medium py-2.5 px-6 rounded-lg border border-gray-300 hover:bg-gray-50">
+            View All Giveaways
+          </button>
+        </Link>
       </div>
     </div>
   );

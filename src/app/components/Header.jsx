@@ -1,8 +1,8 @@
-'use client';
+"use client";
 import { FiMenu, FiX, FiBell } from "react-icons/fi";
-import Link from 'next/link';
-import { useState } from 'react';
-import { Menu } from './Menu';
+import Link from "next/link";
+import { useState } from "react";
+import { Menu } from "./Menu";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,7 +11,7 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-[#e6ecf4] shadow-sm max-w-[480px] w-full mx-auto">
         {/* Menu Toggle Button */}
-        <button 
+        <button
           className="p-2 rounded-md hover:bg-gray-200 transition-colors"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -23,14 +23,17 @@ export default function Header() {
           )}
         </button>
 
-        {/* Center Logo */}
         <div className="absolute left-0 right-0 mx-auto w-fit">
-          <h1 className="text-lg font-bold text-blue-600">Binadda</h1>
+          <Link href="/home">
+            <h2 className="text-lg font-bold text-blue-600 cursor-pointer">
+              Binadda
+            </h2>
+          </Link>
         </div>
 
         {/* Notification Bell */}
-        <Link 
-          href="/notification" 
+        <Link
+          href="/notification"
           className="p-2 rounded-md hover:bg-gray-200 transition-colors"
           aria-label="Notifications"
         >

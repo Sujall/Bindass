@@ -1,6 +1,8 @@
 'use client'
 import { FaBullhorn, FaInfoCircle, FaGift, FaTelegram } from 'react-icons/fa';
 import { RiNotificationFill } from 'react-icons/ri';
+import Link from 'next/link';
+
 
 const notifications = [
   {
@@ -98,9 +100,11 @@ export default function NotificationPage() {
 
         {/* Footer */}
         <div className="bg-gray-50 px-6 py-4 text-center">
-          <button className="text-blue-600 font-medium hover:text-blue-800 transition-colors">
-            View All Notifications
-          </button>
+         <Link href="/notifications">
+  <button className="text-blue-600 font-medium hover:text-blue-800 transition-colors">
+    View All Notifications
+  </button>
+</Link>
         </div>
       </div>
     </div>

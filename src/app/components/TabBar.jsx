@@ -12,6 +12,13 @@ export const TabBar = ({ activeTab, setActiveTab }) => {
   const router = useRouter();
 
   const handleNavigation = (tab, path) => {
+    const protectedTabs = ['history', 'wallet', 'giveaway', 'profile'];
+    
+    if (protectedTabs.includes(tab)) {
+      router.push('/login');
+      return;
+    }
+    
     setActiveTab(tab);
     router.push(path);
   };
