@@ -1,7 +1,7 @@
 // src/app/layout.js
 import "./globals.css";
-import { Header } from "../app/components/Header";
-import TabBarWrapper from "../app/components/TabBarWrapper"; // ✅ use the wrapper
+import { Header } from "./(front)/components/Header";
+import TabBarWrapper from "./(front)/components/TabBarWrapper"; // ✅ use the wrapper
 
 export const metadata = {
   title: "Binadda",
