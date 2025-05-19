@@ -26,7 +26,7 @@ export default function Header() {
         <div className="absolute left-0 right-0 mx-auto w-fit">
           <Link href="/home">
             <h2 className="text-lg font-bold text-blue-600 cursor-pointer">
-              Binadda
+              Bindaas
             </h2>
           </Link>
         </div>

@@ -38,14 +38,14 @@ export default function RefundPolicy() {
             <p className="text-sm leading-relaxed">
               If you haven't received your refund within 10 business days, first check with your bank. 
               Then contact your credit card company as it may take time before the refund is posted. 
-              If you still haven't received your refund, please contact us at support@binadda.com.
+              If you still haven't received your refund, please contact us at support@Bindaas.com.
             </p>
           </section>
 
           <div className="p-4 bg-blue-50 rounded-lg border border-blue-100 mt-6">
             <h3 className="font-medium text-blue-700 mb-2">Need Help?</h3>
             <p className="text-sm text-blue-600">
-              Contact our support team at <span className="font-medium">support@binadda.com</span> 
+              Contact our support team at <span className="font-medium">support@Bindaas.com</span> 
               or call <span className="font-medium">+91 7788994455</span> for any refund-related queries.
             </p>
           </div>

@@ -77,7 +77,7 @@ export default function SupportPage() {
             <div>
               <h3 className="text-base font-semibold text-gray-800">Email Support</h3>
               <p className="text-sm text-gray-600 mt-1">Get help via email with detailed responses</p>
-              <p className="text-sm text-green-600 font-medium mt-2">binaddaonline@bindaas.online</p>
+              <p className="text-sm text-green-600 font-medium mt-2">Bindaasonline@bindaas.online</p>
             </div>
           </div>
 

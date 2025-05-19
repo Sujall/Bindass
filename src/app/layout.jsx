@@ -3,8 +3,8 @@ import Header from '../app/(front)/components/Header'; // This now matches the d
 import TabBarWrapper from "../app/(front)/components/TabBarWrapper";
 
 export const metadata = {
-  title: "Binadda",
-  description: "Binadda Website",
+  title: "Bindaas",
+  description: "Bindaas Website",
 };
 
 export default function RootLayout({ children }) {

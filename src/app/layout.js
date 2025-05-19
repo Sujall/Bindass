@@ -4,8 +4,8 @@ import { Header } from "./(front)/components/Header";
 import TabBarWrapper from "./(front)/components/TabBarWrapper"; // ✅ use the wrapper
 
 export const metadata = {
-  title: "Binadda",
-  description: "Binadda Website",
+  title: "Bindaas",
+  description: "Bindaas Website",
 };
 
 export default function RootLayout({ children }) {

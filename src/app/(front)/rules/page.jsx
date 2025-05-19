@@ -59,7 +59,7 @@ export default function RulesPage() {
         <section>
           <h2 className="text-base font-semibold text-gray-800 mb-1">7. Technical Disruptions</h2>
           <p className="text-sm text-gray-700">
-            In the event of technical disruptions, Binadda reserves the right to cancel, suspend, or modify the giveaway as needed.
+            In the event of technical disruptions, Bindaas reserves the right to cancel, suspend, or modify the giveaway as needed.
           </p>
         </section>
 
@@ -84,7 +84,7 @@ export default function RulesPage() {
           <h2 className="text-base font-semibold text-gray-800 mb-1">10. Contact Us</h2>
           <p className="text-sm text-gray-700">
             Questions about rules or disputes? Reach us at:{" "}
-            <span className="text-blue-600 font-medium">support@binadda.com</span>
+            <span className="text-blue-600 font-medium">support@Bindaas.com</span>
           </p>
         </section>
       </div>

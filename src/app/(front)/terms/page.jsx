@@ -10,7 +10,7 @@ export default function Terms() {
         <section>
           <h2 className="text-lg font-semibold text-gray-800 mb-2">1. User Eligibility</h2>
           <p className="text-sm text-gray-700 leading-relaxed">
-            To use Binadda, you must be at least 18 years old or the age of majority in your jurisdiction. By participating, you confirm you meet this requirement.
+            To use Bindaas, you must be at least 18 years old or the age of majority in your jurisdiction. By participating, you confirm you meet this requirement.
           </p>
         </section>
 
@@ -50,7 +50,7 @@ export default function Terms() {
         <section>
           <h2 className="text-lg font-semibold text-gray-800 mb-2">6. Intellectual Property</h2>
           <p className="text-sm text-gray-700 leading-relaxed">
-            All content, logos, and materials on Binadda are owned by or licensed to us. Unauthorized use is prohibited.
+            All content, logos, and materials on Bindaas are owned by or licensed to us. Unauthorized use is prohibited.
           </p>
         </section>
 
@@ -58,7 +58,7 @@ export default function Terms() {
         <section>
           <h2 className="text-lg font-semibold text-gray-800 mb-2">7. Liability Limitation</h2>
           <p className="text-sm text-gray-700 leading-relaxed">
-            Binadda is not liable for any loss or damages resulting from your use of the platform or participation in giveaways, to the maximum extent allowed by law.
+            Bindaas is not liable for any loss or damages resulting from your use of the platform or participation in giveaways, to the maximum extent allowed by law.
           </p>
         </section>
 
@@ -66,7 +66,7 @@ export default function Terms() {
         <section>
           <h2 className="text-lg font-semibold text-gray-800 mb-2">8. Amendments</h2>
           <p className="text-sm text-gray-700 leading-relaxed">
-            We reserve the right to update these terms at any time. Changes will be effective once posted. Continued use of Binadda indicates acceptance.
+            We reserve the right to update these terms at any time. Changes will be effective once posted. Continued use of Bindaas indicates acceptance.
           </p>
         </section>
 
@@ -75,7 +75,7 @@ export default function Terms() {
           <h2 className="text-lg font-semibold text-gray-800 mb-2">9. Contact Information</h2>
           <p className="text-sm text-gray-700">
             For any questions regarding these terms, please email us at{" "}
-            <span className="text-blue-600 font-medium">support@binadda.com</span>.
+            <span className="text-blue-600 font-medium">support@Bindaas.com</span>.
           </p>
         </section>
       </div>
