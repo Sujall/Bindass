@@ -1,15 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import {
-  FaTimes,
-  FaEyeSlash,
-  FaAngleLeft,
-  FaAngleRight,
   FaArrowRight,
+  FaTimes
 } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const popups = [
   {
@@ -81,7 +78,7 @@ export default function PopupSlider({ onClose }) {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button - Only shown after viewing all slides */}
-            {hasViewedAll && (
+            {/* {hasViewedAll && ( */}
               <button
                 className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
                 onClick={handleClose}
@@ -89,7 +86,7 @@ export default function PopupSlider({ onClose }) {
               >
                 <FaTimes className="text-gray-600" size={18} />
               </button>
-            )}
+            {/* )} */}
 
             {/* Popup Content */}
             <div className="p-5 pt-8 text-gray-800">
@@ -148,7 +145,7 @@ export default function PopupSlider({ onClose }) {
               </div>
 
               {/* Bottom Options */}
-              <div className="flex justify-between items-center text-sm pt-2 border-t border-gray-200">
+              {/* <div className="flex justify-between items-center text-sm pt-2 border-t border-gray-200">
                 <button className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors">
                   <FaEyeSlash size={14} />
                   <span className="text-xs">Don't show again</span>
@@ -177,7 +174,7 @@ export default function PopupSlider({ onClose }) {
                     )}
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </motion.div>
         </motion.div>

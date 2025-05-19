@@ -4,7 +4,7 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import { FiMenu } from "react-icons/fi";
 import { MdOutlineCancel } from "react-icons/md";
-import { Button } from "@material-tailwind/react";
+import NavbarSimple from "./components/Navbar";
 
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,17 +31,8 @@ export default function DashboardLayout({ children }) {
           </button>
         </header>
 
-        {/* Desktop Top Navbar */}
-        <div className="hidden lg:flex justify-end px-4 py-2 bg-black">
-          <div className="flex gap-2">
-            <Button variant="text" size="sm" className="text-white">
-              Log In
-            </Button>
-            <Button variant="gradient" size="sm" className="bg-white text-black">
-              Sign In
-            </Button>
-          </div>
-        </div>
+        {/* Custom Dashboard Navbar (desktop) */}
+        <NavbarSimple />
 
         {/* Main content area */}
         <main className="p-4">{children}</main>

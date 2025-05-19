@@ -4,8 +4,7 @@ import React from "react";
 import {
   Navbar,
   Collapse,
-  Typography,
-  Button,
+  Avatar,
   IconButton,
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -22,32 +21,26 @@ export default function NavbarSimple() {
   }, []);
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl bg-black px-12 py-6">
+    <Navbar className="sticky top-0 z-50 mx-auto max-w-screen-xl bg-black px-12 py-6">
       <div className="flex items-center justify-between text-white">
-        <Typography
-          as="a"
-          href="#"
-          variant="h6"
-          className="mr-4 cursor-pointer py-1.5 lg:ml-2"
-        >
-          Material Tailwind
-        </Typography>
+        {/* Empty left side space for now */}
+        <div></div>
 
-        <div className="hidden lg:flex justify-end">
-          <div className="flex gap-2">
-            <Button variant="text" size="sm" className="text-white">
-              Log In
-            </Button>
-            <Button variant="gradient" size="sm" className="bg-white text-black">
-              Sign In
-            </Button>
-          </div>
+        {/* Avatar aligned to right */}
+        <div className="flex items-center justify-end w-full lg:w-auto">
+          <Avatar
+            src="/images/default-user-avatar.png"
+            alt="profile"
+            size="sm"
+            className="cursor-pointer border-2 border-white"
+          />
         </div>
 
+        {/* Mobile menu toggle */}
         <IconButton
           variant="text"
           color="white"
-          className="lg:hidden"
+          className="lg:hidden ml-4"
           onClick={() => setOpenNav(!openNav)}
           aria-label="Toggle Navigation"
         >
@@ -59,14 +52,15 @@ export default function NavbarSimple() {
         </IconButton>
       </div>
 
+      {/* Avatar for mobile view */}
       <Collapse open={openNav}>
-        <div className="flex flex-col gap-2 px-4 pb-4 lg:hidden">
-          <Button variant="outlined" size="sm" className="text-white border-white" fullWidth>
-            Log In
-          </Button>
-          <Button variant="gradient" size="sm" fullWidth>
-            Sign In
-          </Button>
+        <div className="flex justify-end px-4 pb-4 lg:hidden">
+          <Avatar
+            src="/images/useravatar.png"
+            alt="profile"
+            size="sm"
+            className="cursor-pointer border-2 border-white"
+          />
         </div>
       </Collapse>
     </Navbar>
