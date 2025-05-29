@@ -154,10 +154,9 @@ const Grid = () => {
           {/* Entry Fee Below Progress */}
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center text-gray-700">
-              <FaRupeeSign className="mr-1 text-sm" />
               <span className="font-bold">Entry fee:</span>
               <span className="font-bold ml-1 text-gray-900">
-                ₹{item.entryFee}
+                ₹ {item.entryFee}
               </span>
             </div>
           </div>
