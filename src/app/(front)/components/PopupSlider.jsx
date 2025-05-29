@@ -1,25 +1,23 @@
-'use client';
+"use client";
 
-import { AnimatePresence, motion } from 'framer-motion';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import {
-  FaArrowRight,
-  FaTimes
-} from 'react-icons/fa';
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { FaArrowRight, FaTimes } from "react-icons/fa";
 
 const popups = [
   {
-    title: 'Claim Your ₹5,000 Cash!',
-    image: '/images/Giveaway.jpg',
-    description: '🎉 Last Call! Enter the ₹5,000 Cash Giveaway Before It\'s Too Late!',
-    link: '/login',
+    title: "Claim Your ₹5,000 Cash!",
+    image: "/images/Giveaway.jpg",
+    description:
+      "🎉 Last Call! Enter the ₹5,000 Cash Giveaway Before It's Too Late!",
+    link: "/login",
   },
   {
-    title: 'Claim Your ₹10,000!',
-    image: '/images/iphone-15-pro-thumbnail.png',
-    description: '🏆 Enter the ₹10,000 Cash Giveaway for a Chance to Win Big!',
-    link: '/login',
+    title: "Claim Your ₹10,000!",
+    image: "/images/iphone-15-pro-thumbnail.png",
+    description: "🏆 Enter the ₹10,000 Cash Giveaway for a Chance to Win Big!",
+    link: "/login",
   },
 ];
 
@@ -34,14 +32,14 @@ export default function PopupSlider({ onClose }) {
 
   const nextPopup = () => {
     if (index < popups.length - 1) {
-      setIndex(prev => prev + 1);
+      setIndex((prev) => prev + 1);
     } else {
       setHasViewedAll(true);
     }
   };
 
   const prevPopup = () => {
-    setIndex(prev => (prev > 0 ? prev - 1 : prev));
+    setIndex((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
   const handleClose = () => {
@@ -73,19 +71,19 @@ export default function PopupSlider({ onClose }) {
             initial={{ scale: 0.9, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', damping: 20 }}
+            transition={{ type: "spring", damping: 20 }}
             className="relative w-[90%] max-w-md rounded-2xl overflow-hidden shadow-2xl bg-white"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button - Only shown after viewing all slides */}
             {/* {hasViewedAll && ( */}
-              <button
-                className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                onClick={handleClose}
-                aria-label="Close popup"
-              >
-                <FaTimes className="text-gray-600" size={18} />
-              </button>
+            <button
+              className="absolute top-3 right-3 z-10 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+              onClick={handleClose}
+              aria-label="Close popup"
+            >
+              <FaTimes className="text-gray-600" size={18} />
+            </button>
             {/* )} */}
 
             {/* Popup Content */}
@@ -98,7 +96,7 @@ export default function PopupSlider({ onClose }) {
                       key={i}
                       onClick={() => setIndex(i)}
                       className={`h-1.5 w-6 rounded-full transition-all ${
-                        i === index ? 'bg-blue-600' : 'bg-gray-300'
+                        i === index ? "bg-blue-600" : "bg-gray-300"
                       }`}
                       aria-label={`Go to slide ${i + 1}`}
                     />
@@ -143,38 +141,6 @@ export default function PopupSlider({ onClose }) {
                   Learn more <FaArrowRight size={14} />
                 </a>
               </div>
-
-              {/* Bottom Options */}
-              {/* <div className="flex justify-between items-center text-sm pt-2 border-t border-gray-200">
-                <button className="flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors">
-                  <FaEyeSlash size={14} />
-                  <span className="text-xs">Don't show again</span>
-                </button>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={prevPopup}
-                    disabled={index === 0}
-                    className={`p-2 rounded-full ${
-                      index === 0 ? 'opacity-30' : 'hover:bg-gray-100'
-                    }`}
-                    aria-label="Previous"
-                  >
-                    <FaAngleLeft size={18} className="text-gray-600" />
-                  </button>
-                  <button
-                    onClick={nextPopup}
-                    className={`p-2 rounded-full hover:bg-gray-100`}
-                    aria-label={index < popups.length - 1 ? "Next" : "Close"}
-                  >
-                    {index < popups.length - 1 ? (
-                      <FaAngleRight size={18} className="text-gray-600" />
-                    ) : (
-                      <FaTimes size={16} className="text-gray-600" />
-                    )}
-                  </button>
-                </div>
-              </div> */}
             </div>
           </motion.div>
         </motion.div>

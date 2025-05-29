@@ -1,8 +1,9 @@
 'use client';
-import { use } from 'react';
+import { use, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaUsers, FaRupeeSign } from 'react-icons/fa';
+import { FaUsers, FaRupeeSign, FaClock } from 'react-icons/fa';
+import { MdCheckCircle } from 'react-icons/md';
 
 const mockData = {
   1: {
@@ -11,15 +12,34 @@ const mockData = {
     title: 'iPhone 15 Giveaway: Black, Bold & Yours to Win!',
     description: '🎉 Win the brand-new Apple iPhone 15 (Black, 128 GB)! 🎉',
     entryFee: '19',
-    seats: { current: 742, total: 1500 },
-  },
-  2: {
-    id: 2,
-    image: '/images/iphone.png',
-    title: 'iPhone 14 Pro Max Giveaway!',
-    description: '🚀 Get a chance to win iPhone 14 Pro Max (256 GB) 💥',
-    entryFee: '29',
-    seats: { current: 325, total: 1000 },
+    seats: { current: 755, total: 1500 },
+    endTime: 'May 15, 03:13 PM',
+    specs: [
+      {
+        icon: '🖤',
+        title: 'Stunning Black Design',
+        description:
+          'Aerospace-grade aluminum with color-infused glass for that premium look & feel.',
+      },
+      {
+        icon: '💾',
+        title: '128 GB Storage',
+        description:
+          'Store all your photos, videos, apps, and files with ease.',
+      },
+      {
+        icon: '⚡',
+        title: 'A16 Bionic Chip',
+        description:
+          'Blazing-fast speed for gaming, streaming, and multitasking.',
+      },
+      {
+        icon: '📸',
+        title: '48MP Advanced Dual-Camera System',
+        description:
+          'Shoot stunning portraits, sharp night photos, and cinematic 4K videos.',
+      },
+    ],
   },
 };
 
@@ -28,6 +48,7 @@ const GiveawayDetailPage = ({ params }) => {
   const unwrappedParams = use(params);
   const { id } = unwrappedParams;
   const item = mockData[id];
+  const [tab, setTab] = useState('details');
 
   if (!item) {
     return (
@@ -48,7 +69,8 @@ const GiveawayDetailPage = ({ params }) => {
   const isAvailable = current < total;
 
   return (
-    <div className="max-w-[480px] mx-auto px-4 py-6">
+    <div className="max-w-[480px] mx-auto px-2 py-2">
+      {/* Image Banner */}
       <div className="relative w-full aspect-[4/2] rounded-xl overflow-hidden">
         <Image
           src={item.image}
@@ -59,52 +81,149 @@ const GiveawayDetailPage = ({ params }) => {
         />
       </div>
 
-      <h1 className="text-2xl font-bold text-gray-900 mt-4">{item.title}</h1>
-      <p className="text-sm text-gray-700 mt-2">{item.description}</p>
+      {/* Title & Description */}
+      <h1 className="text-xl font-semibold text-gray-900 mt-4">{item.title}</h1>
+      <p className="text-sm text-gray-700 mt-1">{item.description}</p>
 
-      <div className="flex justify-between text-sm text-gray-800 mt-4 font-semibold">
+      {/* Stats Bar */}
+      <div className="flex justify-between items-center text-sm text-gray-800 mt-4 font-semibold">
         <div className="flex items-center gap-1">
           <FaUsers />
-          <span>{current}/{total} seats</span>
+          <span>{current}/{total} entries</span>
         </div>
         <div className="flex items-center gap-1">
-          <FaRupeeSign />
-          <span>{item.entryFee}</span>
+          <FaClock />
+          <span>7d 20h 51m</span>
         </div>
       </div>
 
-      <div className="w-full bg-gray-200 h-2 rounded-full mt-2">
-        <div
-          className={`h-full rounded-full ${
-            item.entryFee.includes("₹19") ? "bg-green-500" : "bg-blue-700"
-          }`}
-          style={{ width: `${percentage}%` }}
-        />
+      {/* Tab Selector */}
+      <div className="mt-6 flex border-b">
+        {['details', 'participants', 'winner'].map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`flex-1 py-2 text-sm font-semibold capitalize ${
+              tab === t
+                ? 'border-b-2 border-blue-600 text-blue-600'
+                : 'text-gray-500'
+            }`}
+          >
+            {t}
+          </button>
+        ))}
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <span
-          className={`text-xs px-2 py-1 rounded-full ${
-            isAvailable ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-          }`}
-        >
-          {isAvailable ? "AVAILABLE" : "FULL"}
-        </span>
-        <span className="text-sm font-medium text-gray-600">
-          {percentage}% filled
-        </span>
-      </div>
+      {/* Details Tab */}
+      {tab === 'details' && (
+        <div className="pt-4">
+          <div className="text-sm text-gray-800">
+            <p>
+              📱 🎉 <strong>Apple iPhone 15 (128 GB, Black) Giveaway</strong> 🎉 📱
+            </p>
+            <p className="mt-2">
+              Get ready to elevate your everyday with the iconic{' '}
+              <strong>Apple iPhone 15</strong> in sleek <strong>Black 🖤</strong>
+              — the perfect blend of style, power, and performance!
+            </p>
+            <p className="mt-2">
+              Whether you're snapping photos, gaming, or multitasking like a pro,
+              the iPhone 15 is built to impress.
+            </p>
+          </div>
 
-      <button
-        className={`w-full font-bold py-3 mt-6 rounded-lg transition duration-200 ${
-          isAvailable
-            ? "bg-gray-900 text-white hover:bg-black"
-            : "bg-gray-400 text-white cursor-not-allowed"
-        }`}
-        disabled={!isAvailable}
-      >
-        {isAvailable ? "Join Giveaway" : "Giveaway Full"}
-      </button>
+          {/* Features List */}
+          <div className="mt-4 space-y-4 text-sm">
+            <div className="flex items-start gap-2 text-green-600 font-medium">
+              <MdCheckCircle className="mt-1" />
+              <span>Why you'll love the iPhone 15:</span>
+            </div>
+
+            {item.specs.map((spec, index) => (
+              <div key={index} className="pl-6 text-gray-800">
+                <p className="font-semibold">
+                  {spec.icon} {spec.title}
+                </p>
+                <p className="text-gray-600 text-sm">{spec.description}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Giveaway Details */}
+          <div className="mt-6 border rounded-lg p-4 text-sm text-gray-800 bg-gray-50">
+            <p><strong>Entry fee:</strong> ₹{item.entryFee}</p>
+            <p><strong>Total seats:</strong> {item.seats.total}</p>
+            <p><strong>Ends at:</strong> {item.endTime}</p>
+            <div className="mt-2 flex gap-2 text-xs text-gray-600">
+              <span className="bg-gray-200 px-2 py-1 rounded">Mobile</span>
+              <span className="bg-gray-200 px-2 py-1 rounded">iPhone</span>
+              <span className="bg-gray-200 px-2 py-1 rounded">Apple</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Participants Tab */}
+      {tab === 'participants' && (
+        <div className="pt-4 pb-24">
+          {/* Most Recent Title */}
+          <h2 className="text-sm font-semibold text-gray-800 mb-3">Most Recent</h2>
+
+          {/* Participant List */}
+          <div className="bg-white rounded-xl shadow-sm border overflow-hidden divide-y">
+            {[
+              { name: 'Simon Tirkey' },
+              { name: 'Mukesh Razz' },
+              { name: 'Amit Bhagat' },
+            ].map((user, idx) => (
+              <div key={idx} className="flex items-center gap-3 p-4">
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm font-medium">
+                  👤
+                </div>
+                <span className="text-sm text-gray-900">{user.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Entry Fee + Join Now */}
+          <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto px-4 py-3 bg-white border-t">
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <p className="text-gray-500">Entry fee</p>
+                <p className="font-semibold text-gray-900">₹{item.entryFee}</p>
+              </div>
+              <button className="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-md">
+                Join Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Winner Tab */}
+      {tab === 'winner' && (
+        <div className="pt-6 pb-24 flex justify-center items-center flex-col">
+          {/* Winner Pending Card */}
+          <div className="bg-white rounded-xl shadow-sm border w-full max-w-md px-6 py-8 text-center">
+            <div className="text-4xl text-gray-400 mb-4">⏰</div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-1">Winner Pending</h3>
+            <p className="text-sm text-gray-500">The winner will be announced after the giveaway ends</p>
+          </div>
+
+          {/* Entry Fee + Join Now Button */}
+          <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto px-4 py-3 bg-white border-t">
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <p className="text-gray-500">Entry fee</p>
+                <p className="font-semibold text-gray-900">₹{item.entryFee}</p>
+              </div>
+              <button className="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-md">
+                Join Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

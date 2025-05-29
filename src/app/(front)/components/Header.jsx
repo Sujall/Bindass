@@ -1,11 +1,15 @@
 "use client";
-import { FiMenu, FiX, FiBell } from "react-icons/fi";
+import { IoMenu, IoClose, IoNotificationsOutline } from "react-icons/io5";
 import Link from "next/link";
 import { useState } from "react";
 import { Menu } from "./Menu";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <>
@@ -14,20 +18,19 @@ export default function Header() {
         <button
           className="p-2 rounded-md hover:bg-gray-200 transition-colors"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={toggleMenu}
         >
           {isMenuOpen ? (
-            <FiX className="text-xl text-gray-700" />
+            <IoClose className="text-xl text-gray-700 font-bold" />
           ) : (
-            <FiMenu className="text-xl text-gray-700" />
+            <IoMenu className="text-xl text-gray-700 font-bold" />
           )}
         </button>
 
+        {/* Centered Logo */}
         <div className="absolute left-0 right-0 mx-auto w-fit">
-          <Link href="/home">
-            <h2 className="text-lg font-bold text-blue-600 cursor-pointer">
-              Bindaas
-            </h2>
+          <Link href="/home" className="cursor-pointer">
+            <h2 className="text-lg font-bold text-blue-600">Bindaas</h2>
           </Link>
         </div>
 
@@ -37,7 +40,7 @@ export default function Header() {
           className="p-2 rounded-md hover:bg-gray-200 transition-colors"
           aria-label="Notifications"
         >
-          <FiBell className="text-xl text-gray-700" />
+          <IoNotificationsOutline className="text-xl text-gray-700 font-bold" />
         </Link>
       </header>
 

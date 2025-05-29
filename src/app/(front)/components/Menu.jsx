@@ -1,19 +1,26 @@
-'use client';
-import Link from 'next/link';
+"use client";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export function Menu({ isOpen, onClose }) {
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   return (
     <>
       {/* Overlay */}
-      <div 
+      <div
         className="fixed inset-0 z-40 bg-black bg-opacity-50"
         onClick={onClose}
       />
-      
+
       {/* Menu Container */}
-      <div className="fixed top-14   z-50 h-full w-[75%] max-w-[480px] bg-[#e6ecf4] shadow-lg">
+      <div className="fixed top-14 z-50 h-full w-[75%] max-w-[480px] bg-[#e6ecf4] shadow-lg">
        
 
         {/* Menu Items */}
@@ -23,7 +30,7 @@ export function Menu({ isOpen, onClose }) {
             { href: "/about-us", label: "About Us" },
             { href: "/rules", label: "Rules" },
             { href: "/privacy-policy", label: "Privacy & Policy" },
-            { href: "/terms", label: "Term and Conditions" }
+            { href: "/terms", label: "Term and Conditions" },
           ].map((item) => (
             <Link
               key={item.href}
