@@ -1,4 +1,3 @@
-// src/app/components/TabBarWrapper.jsx
 'use client';
 
 import { useState } from 'react';
