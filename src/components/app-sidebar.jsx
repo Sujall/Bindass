@@ -1,16 +1,5 @@
 "use client";
-
-import * as React from "react";
-import {
-  BookOpen,
-  Bot,
-  GalleryVerticalEnd,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
-
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
+import React from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -18,6 +7,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
+import { BookOpen, Bot, Settings2, SquareTerminal } from "lucide-react";
 
 const data = {
   user: {
@@ -29,24 +21,14 @@ const data = {
   navMain: [
     {
       title: "Home",
-      url: "#",
+      url: "/dashboard/home",
       icon: SquareTerminal,
       isActive: true,
-      items: [
-        { title: "History", url: "#" },
-        { title: "Starred", url: "#" },
-        { title: "Settings", url: "#" },
-      ],
     },
     {
       title: "History",
-      url: "#",
+      url: "/dashboard/history",
       icon: Bot,
-      items: [
-        { title: "Genesis", url: "#" },
-        { title: "Explorer", url: "#" },
-        { title: "Quantum", url: "#" },
-      ],
     },
     {
       title: "Giveaway",
@@ -60,23 +42,16 @@ const data = {
     },
     {
       title: "Profile",
-      url: "#",
+      url: "/dashboard/profile",
       icon: Settings2,
-      items: [
-        { title: "General", url: "#" },
-        { title: "Team", url: "#" },
-        { title: "Billing", url: "#" },
-        { title: "Limits", url: "#" },
-      ],
-    },
+    }
   ],
 };
 
 export function AppSidebar(props) {
   return (
-    <Sidebar {...props}> 
-      <SidebarHeader>
-      </SidebarHeader>
+    <Sidebar {...props}>
+      <SidebarHeader />
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>

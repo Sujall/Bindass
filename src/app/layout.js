@@ -1,7 +1,6 @@
-// src/app/layout.js
 import "./globals.css";
 import { Header } from "./(front)/components/Header";
-import TabBarWrapper from "./(front)/components/TabBarWrapper"; // ✅ use the wrapper
+import TabBarWrapper from "./(front)/components/TabBarWrapper"; 
 
 export const metadata = {
   title: "Bindaas",
@@ -15,7 +14,7 @@ export default function RootLayout({ children }) {
         <div className="max-w-[480px] w-full mx-auto bg-[#e6ecf4] min-h-screen flex flex-col">
           <Header />
           <main className="flex-1 pb-16">{children}</main>
-          <TabBarWrapper /> {/* ✅ now safe */}
+          <TabBarWrapper /> 
         </div>
       </body>
     </html>
