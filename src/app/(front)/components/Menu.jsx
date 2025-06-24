@@ -15,7 +15,7 @@ export function Menu({ isOpen, onClose }) {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 z-40 bg-black bg-opacity-50"
+        className="fixed inset-0 z-40 bg-[#1a3144]"
         onClick={onClose}
       />
 

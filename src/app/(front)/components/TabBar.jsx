@@ -12,10 +12,10 @@ export const TabBar = ({ activeTab, setActiveTab }) => {
   const handleNavigation = (tab, path) => {
     const protectedTabs = ["history", "wallet", "giveaway", "profile"];
 
-    if (protectedTabs.includes(tab)) {
-      router.push("/login");
-      return;
-    }
+    // if (protectedTabs.includes(tab)) {
+    //   router.push("/login");
+    //   return;
+    // }
 
     setActiveTab(tab);
     router.push(path);
@@ -23,11 +23,11 @@ export const TabBar = ({ activeTab, setActiveTab }) => {
 
   return (
     <div className="bg-white border-t border-gray-200 rounded-t-xl">
-      <div className="flex justify-between items-center px-2 py-1">
+      <div className="flex justify-between items-center px-2 py-2">
         {/* Home Tab */}
         <button
           onClick={() => handleNavigation("home", "/home")}
-          className="flex flex-col items-center flex-1"
+          className="flex flex-col items-center flex-1 cursor-pointer"
         >
           <AiFillHome
             className={`text-2xl ${
@@ -48,17 +48,17 @@ export const TabBar = ({ activeTab, setActiveTab }) => {
         {/* History Tab */}
         <button
           onClick={() => handleNavigation("history", "/history")}
-          className="flex flex-col items-center flex-1"
+          className="flex flex-col items-center flex-1 cursor-pointer"
         >
           <AiOutlineHistory
             className={`text-2xl ${
-              activeTab === "history" ? "text-gray-700" : "text-gray-500"
+              activeTab === "history" ? "text-orange-500" : "text-gray-500"
             } font-bold`}
           />
           <span
             className={`text-xs mt-1 ${
-              activeTab === "history"
-                ? "text-gray-700 font-bold"
+                activeTab === "history"
+                ? "text-orange-500 font-bold"
                 : "text-gray-500"
             }`}
           >
@@ -69,7 +69,7 @@ export const TabBar = ({ activeTab, setActiveTab }) => {
         {/* Wallet Tab (Center Button) */}
         <button
           onClick={() => handleNavigation("wallet", "/wallet")}
-          className="relative flex flex-col items-center flex-1 z-10"
+          className="relative flex flex-col items-center flex-1 z-10 cursor-pointer"
           style={{ marginTop: "-28px" }}
         >
           <span
@@ -85,17 +85,17 @@ export const TabBar = ({ activeTab, setActiveTab }) => {
         {/* Giveaway Tab */}
         <button
           onClick={() => handleNavigation("giveaway", "/giveawaypage")}
-          className="flex flex-col items-center flex-1"
+          className="flex flex-col items-center flex-1 cursor-pointer"
         >
           <FaGift
             className={`text-2xl ${
-              activeTab === "giveaway" ? "text-gray-700" : "text-gray-500"
+              activeTab === "giveaway" ? "text-orange-500" : "text-gray-500"
             } font-bold`}
           />
           <span
             className={`text-xs mt-1 ${
-              activeTab === "giveaway"
-                ? "text-gray-700 font-bold"
+                activeTab === "giveaway"
+                ? "text-orange-500 font-bold"
                 : "text-gray-500"
             }`}
           >
@@ -106,19 +106,21 @@ export const TabBar = ({ activeTab, setActiveTab }) => {
         {/* Profile Tab */}
         <button
           onClick={() => handleNavigation("profile", "/profile")}
-          className="flex flex-col items-center flex-1"
+          className="flex flex-col items-center flex-1 cursor-pointer"
         >
           <IoPersonSharp
             className={`text-2xl ${
-              activeTab === "me" ? "text-gray-700" : "text-gray-500"
+              activeTab === "profile" ? "text-orange-500" : "text-gray-500"
             } font-bold`}
           />
           <span
             className={`text-xs mt-1 ${
-              activeTab === "me" ? "text-gray-700 font-bold" : "text-gray-500"
+                 activeTab === "profile"
+                ? "text-orange-500 font-bold"
+                : "text-gray-500"
             }`}
           >
-            Me
+            Profile
           </span>
         </button>
       </div>

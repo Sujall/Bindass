@@ -1,18 +1,15 @@
 "use client";
-import {
-  FaUser,
-  FaWallet,
-  FaHistory,
-  FaCog,
-  FaSyncAlt,
-  FaQuestionCircle,
-  FaSignOutAlt,
-  FaTrophy,
-  FaPlayCircle,
-  FaCheckCircle,
-} from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  FaCheckCircle,
+  FaHistory,
+  FaPlayCircle,
+  FaSignOutAlt,
+  FaTrophy,
+  FaUser,
+  FaWallet
+} from "react-icons/fa";
 
 export default function ProfilePage() {
   return (
@@ -41,11 +38,11 @@ export default function ProfilePage() {
                 Edit Profile
               </button>
             </Link>
-            <Link href="/wallet">
+            {/* <Link href="/wallet">
             <button className="px-5 py-2 rounded-full border border-blue-600 text-blue-600 text-sm font-semibold hover:bg-blue-50 transition">
               Add Money
             </button>
-            </Link>
+            </Link> */}
           </div>
         </div>
 
@@ -79,11 +76,11 @@ export default function ProfilePage() {
         </Section>
 
         {/* App */}
-        <Section title="App">
+        {/* <Section title="App">
           <Item icon={<FaCog className="text-gray-600" />} label="Settings" />
           <Item icon={<FaSyncAlt className="text-orange-500" />} label="Clear Cache" />
           <Item icon={<FaQuestionCircle className="text-pink-500" />} label="Help & Support" />
-        </Section>
+        </Section> */}
 
         {/* Actions */}
         <Section title="Actions">

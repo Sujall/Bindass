@@ -16,7 +16,7 @@ export default function Header() {
       <header className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-[#e6ecf4] shadow-sm max-w-[480px] w-full mx-auto">
         {/* Menu Toggle Button */}
         <button
-          className="p-2 rounded-md hover:bg-gray-200 transition-colors"
+          className="p-2 rounded-md hover:bg-gray-200 transition-colors cursor-pointer"
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           onClick={toggleMenu}
         >
