@@ -1,21 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { getUserProfile, updateUserProfile } from "@/api/apiClient";
 
 export default function EditProfile() {
   const router = useRouter();
-  
-  // Pre-filled dummy data
+
   const [formData, setFormData] = useState({
-    fullName: "John Doe",
-    email: "john.doe@example.com",
-    mobile: "+1 (555) 123-4567",
-    address: "123 Main Street, Apt 4B\nNew York, NY 10001"
+    fullName: "",
+    email: "",
+    mobile: "",
+    address: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const user = await getUserProfile();
+        setFormData({
+          fullName: user.fullName || "",
+          email: user.email || "",
+          mobile: user.mobile || "",
+          address: user.address || "",
+        });
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,23 +42,21 @@ export default function EditProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setIsSubmitting(false);
-    router.push("/profile");
+    try {
+      await updateUserProfile({
+        fullName: formData.fullName,
+        mobile: formData.mobile,
+        address: formData.address,
+      });
+      router.push("/profile");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleBack = () => {
-    router.push("/profile");
-  };
-
-  const handleSendOTP = () => {
-    // Simulate OTP sending
-    alert(`OTP sent to ${formData.email}`);
-    setEmailVerified(false);
-  };
+  const handleBack = () => router.push("/profile");
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-100">
@@ -67,7 +82,7 @@ export default function EditProfile() {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Profile Picture */}
-            <div className="flex justify-center mb-6">
+            {/* <div className="flex justify-center mb-6">
               <div className="relative group">
                 <div className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center overflow-hidden">
                   <svg className="h-16 w-16 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
@@ -85,7 +100,7 @@ export default function EditProfile() {
                   </svg>
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Full Name */}
             <div>
@@ -111,23 +126,10 @@ export default function EditProfile() {
                   <span className="ml-2 text-xs text-green-600">✓ Verified</span>
                 )}
               </label>
-              <div className="flex rounded-md shadow-sm">
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
+              <div className="flex rounded-md shadow-sm bg-gray-300">
+                <span
                   className="block w-full flex-1 rounded-l-md border border-gray-300 p-2.5 focus:border-blue-500 focus:ring-blue-500"
-                />
-                <button 
-                  type="button" 
-                  onClick={handleSendOTP}
-                  className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-blue-600 px-3 text-sm text-white hover:bg-blue-700 transition-colors"
-                >
-                  Send OTP
-                </button>
+                >{formData.email}</span>
               </div>
             </div>
 

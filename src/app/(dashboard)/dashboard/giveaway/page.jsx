@@ -31,7 +31,7 @@ export default function CreateGiveawayPage() {
   };
 
   return (
-    <div className="bg-white p-6 max-w-4xl mx-auto">
+    <div className="bg-white">
       <h1 className="text-2xl font-bold mb-6">Create a New Giveaway</h1>
 
       <form className="space-y-6" onSubmit={handleSubmit}>

@@ -56,7 +56,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 p-6">
+    <div className="flex flex-col min-h-screen p-6">
       <h1 className="text-3xl font-semibold text-gray-800 mb-4">
         Welcome to the Dashboard
       </h1>
