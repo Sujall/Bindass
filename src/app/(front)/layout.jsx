@@ -7,7 +7,7 @@ import TabBarWrapper from "./components/TabBarWrapper";
 export default function Layout({ children }) {
   const pathname = usePathname();
 
-  const isGiveawayDetail = /^\/giveaway\/\d+$/.test(pathname); // Matches /giveaway/123, /giveaway/1, etc.
+const isGiveawayDetail = /^\/giveaway\/[a-zA-Z0-9_-]+$/.test(pathname);
 
   return (
     <div className="max-w-[480px] w-full mx-auto bg-[#e6ecf4] min-h-screen flex flex-col">

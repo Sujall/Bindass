@@ -78,3 +78,23 @@ export const updateUserProfile = async (data) => {
   }
 };
 
+export const getAllGiveaways = async () => {
+  try {
+    const res = await apiClient.get("/giveaways/all-giveaways");
+    return res.data;
+  } catch (err) {
+    console.error("GiveAways fetching error:", err.response?.data || err.message);
+    throw err;
+  }
+};
+
+
+export const getGiveawayByID = async (id) => {
+  try {
+    const res = await apiClient.get(`/giveaways/giveaway/${id}`);
+    return res.data;
+  } catch (err) {
+    console.error("Giveaway by ID fetch error:", err.response?.data || err.message);
+    throw err;
+  }
+}
