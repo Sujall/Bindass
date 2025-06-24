@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create Axios instance
 const apiClient = axios.create({
-  baseURL: "http://192.168.1.151:5002/api",
+  baseURL: "https://bindass-backend.vercel.app/api",
   headers: {
     "Content-Type": "application/json",
   },
