@@ -6,22 +6,17 @@ import { useEffect, useState } from "react";
 
 export default function GiveawayPage() {
   const [search, setSearch] = useState("");
-  const [productGiveaways, setProductGiveaways] = useState([]);
-  const [cashGiveaways, setCashGiveaways] = useState([]);
+  const [giveaways, setGiveaways] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch giveaways on component mount
   useEffect(() => {
     const fetchGiveaways = async () => {
       try {
-        const data = await getAllGiveaways();
+        const res = await getAllGiveaways();
 
-        // Separate product & cash giveaways based on your API response structure
-        const product = data.filter((g) => g.type === "product");
-        const cash = data.filter((g) => g.type === "cash");
-
-        setProductGiveaways(product);
-        setCashGiveaways(cash);
+        const giveaways = Array.isArray(res) ? res : res.giveaways || [];
+        setGiveaways(giveaways);
       } catch (err) {
         console.error("Error loading giveaways:", err);
       } finally {
@@ -35,27 +30,28 @@ export default function GiveawayPage() {
   // Filter giveaways based on search
   const filterGiveaways = (items) =>
     items.filter((item) =>
-      item.title.toLowerCase().includes(search.toLowerCase())
+      item.title?.toLowerCase().includes(search.toLowerCase())
     );
 
   const renderGiveawayCard = (item) => {
-    const { current, total } = item.seats || { current: 0, total: 1 };
-    const percentage = total ? Math.round((current / total) * 100) : 0;
+    const current = item.participants?.length || 0;
+    const total = item.totalSlots || 1;
+    const percentage = Math.round((current / total) * 100);
     const isAvailable = current < total;
 
     return (
       <div
-        key={item.id}
+        key={item.id || item._id}
         className="bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden w-full"
       >
         <div className="relative w-full aspect-[4/2]">
           <Image
-            src={item.image}
+            src={item.bannerUrl}
             alt={item.title}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={item.id <= 2}
+            priority
           />
         </div>
 
@@ -63,14 +59,14 @@ export default function GiveawayPage() {
           <h3 className="font-bold text-lg text-gray-900">{item.title}</h3>
 
           {item.description && (
-            <p className="text-sm text-gray-700 font-medium">
+            <p className="text-sm text-gray-700 font-medium line-clamp-3">
               {item.description}
             </p>
           )}
 
           <div className="flex items-center justify-between text-sm font-semibold mt-2">
             <div className="text-gray-800">
-              Seats: {current}/{total}
+              Slots: {current}/{total}
             </div>
             <span
               className={`px-2 py-0.5 rounded-full text-xs ${
@@ -85,24 +81,20 @@ export default function GiveawayPage() {
 
           <div className="w-full bg-gray-200 h-2 rounded-full mt-1">
             <div
-              className={`h-full rounded-full ${
-                item.entryFee?.includes("₹19")
-                  ? "bg-green-500"
-                  : "bg-blue-700"
-              }`}
+              className="h-full rounded-full bg-blue-700"
               style={{ width: `${percentage}%` }}
-            ></div>
+            />
           </div>
 
           <div className="flex items-center space-x-2 text-sm mt-2">
-            <span className="w-2 h-2 rounded-full bg-orange-500"></span>
+            <span className="w-2 h-2 rounded-full bg-orange-500" />
             <span className="text-gray-700 font-semibold">
-              Entry fee: {item.entryFee}
+              Entry fee: ₹{item.fee}
             </span>
           </div>
 
           <Link
-            href={isAvailable ? `/giveaway/${item.id}` : "#"}
+            href={isAvailable ? `/giveaway/${item._id}` : "#"}
             className={`block w-full text-center text-white font-bold py-2 mt-3 rounded-lg transition duration-200 ${
               isAvailable
                 ? "bg-gray-900 hover:bg-black"
@@ -134,23 +126,13 @@ export default function GiveawayPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-center text-gray-600 font-medium">Loading giveaways...</p>
+        <p className="text-center text-gray-600 font-medium">
+          Loading giveaways...
+        </p>
       ) : (
-        <>
-          {/* Product Giveaways */}
-          <div className="mb-12">
-            <div className="space-y-6">
-              {filterGiveaways(productGiveaways).map(renderGiveawayCard)}
-            </div>
-          </div>
-
-          {/* Cash Giveaways */}
-          <div className="mt-8">
-            <div className="space-y-6">
-              {filterGiveaways(cashGiveaways).map(renderGiveawayCard)}
-            </div>
-          </div>
-        </>
+        <div className="space-y-6">
+          {filterGiveaways(giveaways).map(renderGiveawayCard)}
+        </div>
       )}
     </div>
   );

@@ -29,18 +29,18 @@ const data = {
       isActive: false,
     },
     {
-      title: "Giveaways",
+      title: "Create New Giveaway",
       url: "/dashboard/giveaway",
       icon: Bot,
     },
     {
-      title: "Documentation",
-      url: "#",
+      title: "Giveaway List",
+      url: "/dashboard/giveaway-list",
       icon: BookOpen,
     },
     {
-      title: "Settings",
-      url: "#",
+      title: "Banners",
+      url: "/dashboard/banners",
       icon: Settings2,
     },
   ],

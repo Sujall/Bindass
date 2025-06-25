@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 function StatsCards({ stats }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-6 rounded-full">
       {stats.map(({ id, title, value }) => (
         <div
           key={id}
@@ -51,8 +51,9 @@ export default function HomePage() {
   // Example stats (replace with real data)
   const giveawayStats = [
     { id: 1, title: "Total Number of Giveaways", value: 128 },
-    { id: 2, title: "Average Giveaway Participants", value: 347 },
-    { id: 3, title: "Live Giveaways", value: 5 },
+    { id: 2, title: "Avg Giveaway Participants", value: 347 },
+    { id: 3, title: "Live Giveaways", value: 15 },
+    { id: 4, title: "Banners", value: 5 },
   ];
 
   return (
@@ -65,40 +66,6 @@ export default function HomePage() {
         This is your homepage. You can customize this section to show analytics,
         stats, quick links, or recent activity.
       </p>
-
-      {/* Banner Upload Section */}
-      <div className="bg-white p-6 rounded shadow-md mb-6">
-        <h2 className="text-xl font-medium text-gray-700 mb-4">
-          Upload Banner Image
-        </h2>
-
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="mb-3"
-        />
-
-        {error && <p className="text-sm text-red-500 mb-2">{error}</p>}
-
-        {previewUrl && (
-          <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-2">Preview:</p>
-            <img
-              src={previewUrl}
-              alt="Banner Preview"
-              className="w-full max-w-2xl h-48 object-cover rounded border"
-            />
-          </div>
-        )}
-
-        <button
-          onClick={handleUpload}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-        >
-          Upload Banner
-        </button>
-      </div>
 
       {/* Stats Cards Section */}
       <StatsCards stats={giveawayStats} />

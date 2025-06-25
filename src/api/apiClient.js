@@ -81,6 +81,7 @@ export const updateUserProfile = async (data) => {
 export const getAllGiveaways = async () => {
   try {
     const res = await apiClient.get("/giveaways/all-giveaways");
+    console.log("Giveaways response:", res.data);
     return res.data;
   } catch (err) {
     console.error("GiveAways fetching error:", err.response?.data || err.message);
