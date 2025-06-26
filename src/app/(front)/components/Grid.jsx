@@ -26,7 +26,7 @@ const Grid = () => {
   //             current: g.participantsCount,
   //             total: g.totalSlots,
   //           },
-  //           image: g.bannerUrl || "/images/default-thumbnail.png",
+  //           image: g.giveawayImageUrl || "/images/default-thumbnail.png",
   //           bulletPoints: [
   //             {
   //               text: g.subTitle,
@@ -69,7 +69,7 @@ const Grid = () => {
           current: g.participantsCount,
           total: g.totalSlots,
         },
-        image: g.bannerUrl || "/images/default-thumbnail.png",
+        image: g.giveawayImageUrl || "/images/default-thumbnail.png",
         bulletPoints: [
           {
             text: g.subTitle,

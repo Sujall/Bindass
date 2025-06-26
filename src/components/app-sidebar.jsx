@@ -29,13 +29,8 @@ const data = {
       isActive: false,
     },
     {
-      title: "Create New Giveaway",
+      title: "Giveaways",
       url: "/dashboard/giveaway",
-      icon: Bot,
-    },
-    {
-      title: "Giveaway List",
-      url: "/dashboard/giveaway-list",
       icon: BookOpen,
     },
     {

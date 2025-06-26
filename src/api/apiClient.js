@@ -2,19 +2,20 @@ import axios from "axios";
 
 // Create Axios instance
 const apiClient = axios.create({
-  baseURL: "https://bindass-backend.vercel.app/api",
+  // baseURL: "https://bindass-backend.vercel.app/api",
+  baseURL: "http://192.168.1.151:5002/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
   if (token) config.headers.Authorization = `Bearer ${token}`;
-  console.log(token)
+  console.log(token);
   return config;
 });
-
 
 // Example login call
 export const loginUser = async (email, password) => {
@@ -27,9 +28,49 @@ export const loginUser = async (email, password) => {
   }
 };
 
+export const logoutUser = async () => {
+  try {
+    const res = await apiClient.post("/auth/logout");
+    // Remove token from localStorage
+    localStorage.removeItem("authToken");
+    return res.data;
+  } catch (err) {
+    console.error("Logout error:", err.response?.data || err.message);
+    throw err;
+  }
+};
+
+export const sendResetOTP = async (email) => {
+  try {
+    const res = await apiClient.post("/auth/forgot-password", { email });
+    return res.data;
+  } catch (err) {
+    throw err.response?.data || { message: "Something went wrong" };
+  }
+};
+
+// Verify OTP and reset password
+export const submitNewPassword = async ({ email, otp, newPassword }) => {
+  try {
+    const res = await apiClient.post("/auth/reset-password", {
+      email,
+      otp,
+      newPassword,
+    });
+    return res.data;
+  } catch (err) {
+    throw err.response?.data || { message: "Something went wrong" };
+  }
+};
+
 export default apiClient;
 
-export const initiateRegistration = async ({ fullName, email, mobile, address }) => {
+export const initiateRegistration = async ({
+  fullName,
+  email,
+  mobile,
+  address,
+}) => {
   try {
     const res = await apiClient.post("/auth/initialRegister", {
       fullName,
@@ -39,7 +80,10 @@ export const initiateRegistration = async ({ fullName, email, mobile, address })
     });
     return res.data;
   } catch (err) {
-    console.error("Init registration error:", err.response?.data || err.message);
+    console.error(
+      "Init registration error:",
+      err.response?.data || err.message
+    );
     throw err;
   }
 };
@@ -53,7 +97,10 @@ export const completeRegistration = async ({ email, otp, password }) => {
     });
     return res.data;
   } catch (err) {
-    console.error("Complete registration error:", err.response?.data || err.message);
+    console.error(
+      "Complete registration error:",
+      err.response?.data || err.message
+    );
     throw err;
   }
 };
@@ -65,6 +112,33 @@ export const getUserProfile = async () => {
   } catch (err) {
     console.error("Profile fetch error:", err.response?.data || err.message);
     throw err;
+  }
+};
+
+// api/apiClient.js
+
+export const participateInGiveaway = async ({ giveawayId, transactionId }) => {
+  try {
+    console.log("Sending participation request:", {
+      giveawayId,
+      transactionId,
+    });
+
+    const res = await apiClient.post("/giveaways/participate", {
+      giveawayId,
+      transactionId,
+    });
+
+    // Axios automatically throws for non-2xx status, so no need to check res.ok
+    return res.data;
+  } catch (err) {
+    // Axios error structure handling
+    const message =
+      err?.response?.data?.message ||
+      err?.message ||
+      "Something went wrong during participation";
+    console.error("Error in participateInGiveaway:", message);
+    throw new Error(message);
   }
 };
 
@@ -84,18 +158,90 @@ export const getAllGiveaways = async () => {
     console.log("Giveaways response:", res.data);
     return res.data;
   } catch (err) {
-    console.error("GiveAways fetching error:", err.response?.data || err.message);
+    console.error(
+      "GiveAways fetching error:",
+      err.response?.data || err.message
+    );
     throw err;
   }
 };
-
 
 export const getGiveawayByID = async (id) => {
   try {
     const res = await apiClient.get(`/giveaways/giveaway/${id}`);
     return res.data;
   } catch (err) {
-    console.error("Giveaway by ID fetch error:", err.response?.data || err.message);
+    console.error(
+      "Giveaway by ID fetch error:",
+      err.response?.data || err.message
+    );
     throw err;
   }
-}
+};
+
+// Admin Actions: Banner's
+
+export const fetchAllBanners = async () => {
+  const res = await apiClient.get("/admin/media/banner");
+  return res.data.banners;
+};
+
+export const uploadBannerImage = async (file) => {
+  const formData = new FormData();
+  formData.append("banner", file); // must match backend's multer field name
+
+  const response = await apiClient.post("/admin/media/banner", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data", // optional, can omit
+    },
+  });
+
+  return response.data;
+};
+
+export const deleteBannerById = async (id) => {
+  const response = await apiClient.delete(`/admin/media/banner/${id}`);
+  return response.data;
+};
+
+// Admin Actions: Create Giveaway
+
+export const uploadGiveawayMedia = async (giveawayImage, qrCode) => {
+  const formData = new FormData();
+  formData.append("giveawayImage", giveawayImage);
+  formData.append("qrCode", qrCode);
+
+  for (let [key, val] of formData.entries()) {
+    console.log("FormData:", key, val);
+  }
+
+  try {
+    const response = await apiClient.post("/admin/upload-images", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Upload failed:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Submit the giveaway form with image URLs
+export const createGiveaway = async (formPayload) => {
+  console.log("Form Payload", formPayload);
+  try {
+    const response = await apiClient.post(
+      "/admin/create-giveaway",
+      formPayload
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error in createGiveaway:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};

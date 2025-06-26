@@ -1,17 +1,29 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/pagination";
+import apiClient from "@/api/apiClient";
 
 const Banner = () => {
-  const bannerSlides = [
-    { id: 1, image: "/images/samsung-galaxy-giveaway-banner.png" },
-    { id: 2, image: "/images/cash-giveaway-thumbnail.png" },
-    { id: 3, image: "/images/iphone-15-giveaway-banner.jpg" },
-    { id: 4, image: "/images/samsung-galaxy-giveaway-banner.png" },
-  ];
+  const [banners, setBanners] = useState([]);
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await apiClient.get("/giveaways/media/banners");
+        const data = res.data.banners;
+        console.log(data)
+        setBanners(data);
+      } catch (err) {
+        console.error("Failed to fetch banners:", err.response?.data || err.message);
+      }
+    };
+
+    fetchBanners();
+  }, []);
 
   return (
     <div className="w-full px-2 py-2 bg-gray-50">
@@ -34,12 +46,12 @@ const Banner = () => {
           className="h-full"
           loop={true}
         >
-          {bannerSlides.map((slide) => (
-            <SwiperSlide key={slide.id}>
+          {banners.map((banner) => (
+            <SwiperSlide key={banner._id}>
               <div className="relative w-full h-full transition-transform duration-500 hover:scale-105">
                 <Image
-                  src={slide.image}
-                  alt={`Slide ${slide.id}`}
+                  src={banner.url} // Make sure image URL is absolute or handled via next.config.js rewrites
+                  alt={banner.title || "Banner"}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
                   className="object-cover transition-opacity duration-300"

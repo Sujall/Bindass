@@ -1,6 +1,6 @@
 const nextConfig = {
   images: {
-    domains: ["res-console.cloudinary.com", "res.cloudinary.com"], // Allow Cloudinary domains
+    domains: ["res-console.cloudinary.com", "res.cloudinary.com", "res-console.cloudinary.com"], // Allow Cloudinary domains
   },
   async redirects() {
     return [

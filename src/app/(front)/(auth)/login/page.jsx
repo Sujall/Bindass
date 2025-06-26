@@ -38,15 +38,25 @@ export default function LoginPage() {
       // Call the API
       const response = await loginUser(email, password);
 
-      // Assuming the response contains a token property
+      // Assuming the response contains token and user information
       const token = response.token;
+      const user = response.user;
+      console.log("User", response);
 
       if (token) {
         localStorage.setItem("authToken", token); // Store JWT
         console.log("Login successful, token saved:", token);
 
-        // Optional: redirect after login
-        window.location.href = "/home"; // or use Next.js router
+        // Optional: store user info if needed
+        localStorage.setItem("userRole", user.role);
+        console.log("userRole", user.role);
+
+        // Redirect based on user role
+        if (user.role === "admin") {
+          window.location.href = "/dashboard";
+        } else {
+          window.location.href = "/home";
+        }
       } else {
         throw new Error("Token not found in response");
       }

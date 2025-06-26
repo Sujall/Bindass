@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,12 +10,23 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2, Upload } from "lucide-react";
+import {
+  deleteBannerById,
+  fetchAllBanners,
+  uploadBannerImage,
+} from "@/api/apiClient";
+import { DialogBody } from "@material-tailwind/react";
 
 export default function BannerListPage() {
   const [banners, setBanners] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const [selectedBanner, setSelectedBanner] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -33,18 +44,47 @@ export default function BannerListPage() {
     }
   };
 
-  const handleUpload = () => {
+  useEffect(() => {
+    const loadBanners = async () => {
+      try {
+        const fetched = await fetchAllBanners();
+        console.log(fetched);
+        setBanners(fetched);
+      } catch (err) {
+        console.error("Failed to load banners", err);
+      }
+    };
+    loadBanners();
+  }, []);
+
+  const handleUpload = async () => {
     if (!selectedFile) return;
 
-    // Simulate upload
-    setBanners((prev) => [...prev, previewUrl]);
-    setSelectedFile(null);
-    setPreviewUrl(null);
-    alert("Banner uploaded successfully (simulation).");
+    try {
+      setLoading(true);
+      const data = await uploadBannerImage(selectedFile);
+
+      setBanners((prev) => [...prev, data.media.url]);
+      setSelectedFile(null);
+      setPreviewUrl(null);
+      setOpen(false);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to upload banner.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (index) => {
-    setBanners((prev) => prev.filter((_, i) => i !== index));
+  const handleDeleteConfirm = async () => {
+    if (!selectedBanner) return;
+    try {
+      await deleteBannerById(selectedBanner._id);
+      setBanners((prev) => prev.filter((b) => b._id !== selectedBanner._id));
+      setSelectedBanner(null);
+      setConfirmOpen(false);
+    } catch (err) {
+      alert("Failed to delete banner");
+    }
   };
 
   return (
@@ -54,7 +94,7 @@ export default function BannerListPage() {
           Uploaded Banners
         </h1>
 
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>
               <Upload className="mr-2 h-4 w-4" />
@@ -92,10 +132,10 @@ export default function BannerListPage() {
 
               <Button
                 onClick={handleUpload}
-                disabled={!selectedFile}
+                disabled={!selectedFile || loading}
                 className="w-full bg-blue-600 hover:bg-blue-700"
               >
-                Upload
+                {loading ? "Uploading..." : "Upload"}
               </Button>
             </div>
           </DialogContent>
@@ -108,16 +148,19 @@ export default function BannerListPage() {
         ) : (
           banners.map((banner, index) => (
             <div
-              key={index}
+              key={banner._id || index}
               className="relative border rounded-md overflow-hidden shadow-sm"
             >
               <img
-                src={banner}
+                src={banner.url} // ✅ access the `url` property of the object
                 alt={`Banner ${index + 1}`}
                 className="w-full h-48 object-cover"
               />
               <button
-                onClick={() => handleDelete(index)}
+                onClick={() => {
+                  setSelectedBanner(banner);
+                  setConfirmOpen(true);
+                }}
                 className="absolute top-2 right-2 bg-white p-1 rounded-full shadow hover:bg-red-100"
               >
                 <Trash2 className="w-4 h-4 text-red-600" />
@@ -126,6 +169,26 @@ export default function BannerListPage() {
           ))
         )}
       </div>
+
+      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogTitle className="text-lg font-semibold">
+            Delete Banner
+          </DialogTitle>
+          <DialogBody className="text-sm text-gray-600">
+            Are you sure you want to delete this banner? This action cannot be
+            undone.
+          </DialogBody>
+          <div className="flex justify-end space-x-2 mt-4">
+            <Button variant="outline" onClick={() => setConfirmOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteConfirm}>
+              Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

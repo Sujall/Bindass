@@ -46,7 +46,7 @@ export default function GiveawayPage() {
       >
         <div className="relative w-full aspect-[4/2]">
           <Image
-            src={item.bannerUrl}
+            src={item.giveawayImageUrl}
             alt={item.title}
             fill
             className="object-cover"

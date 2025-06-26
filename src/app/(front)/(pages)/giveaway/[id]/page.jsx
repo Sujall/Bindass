@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { FaUsers, FaClock } from "react-icons/fa";
 import { MdCheckCircle } from "react-icons/md";
-import { getGiveawayByID } from "@/api/apiClient";
+import { getGiveawayByID, participateInGiveaway } from "@/api/apiClient";
 
 // The main page component
 const GiveawayDetailPage = () => {
@@ -58,12 +58,14 @@ const GiveawayDetailPage = () => {
   const total = item.totalSlots;
   const percentage = total ? Math.round((current / total) * 100) : 0;
 
+  console.log(item._id)
+
   return (
     <div className="max-w-[480px] mx-auto px-2 py-2 bg-white">
       {/* Image Banner */}
       <div className="relative w-full aspect-[4/2] rounded-xl overflow-hidden">
         <Image
-          src={item.bannerUrl}
+          src={item.giveawayImageUrl}
           alt={item.title}
           fill
           className="object-cover"
@@ -156,7 +158,11 @@ const GiveawayDetailPage = () => {
             )}
           </div>
 
-          <BottomActionBar entryFee={item.fee} qrCodeUrl={item.qrCodeUrl} />
+          <BottomActionBar
+            entryFee={item.fee}
+            qrCodeUrl={item.qrCodeUrl}
+            giveawayId={item._id}
+          />
         </div>
       )}
 
@@ -207,27 +213,45 @@ const GiveawayDetailPage = () => {
 
 export default GiveawayDetailPage;
 
-const BottomActionBar = ({ entryFee, qrCodeUrl }) => {
+const BottomActionBar = ({ entryFee, qrCodeUrl, giveawayId }) => {
   const [showSheet, setShowSheet] = useState(false);
   const [transactionId, setTransactionId] = useState("");
-  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
 
   const handlePayment = () => {
     setShowSheet(true);
   };
 
-  const handleSubmit = () => {
-    if (!transactionId || !email) {
-      alert("Please enter both Transaction ID and Email");
+  const handleSubmit = async () => {
+    if (!transactionId) {
+      alert("Please enter the Transaction ID");
       return;
     }
-    alert(`Submitted:\nEmail: ${email}\nTxn: ${transactionId}`);
-    setShowSheet(false);
+
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const response = await participateInGiveaway({
+        giveawayId,
+        transactionId,
+      });
+
+      setMessage(response.message || "Successfully registered!");
+      setTransactionId("");
+      setShowSheet(false);
+    } catch (err) {
+      console.error("Participation error:", err);
+      setMessage(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto px-4 py-3 bg-white border-t">
+      <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto px-4 py-3 bg-white border-t z-10">
         <div className="flex items-center justify-between">
           <div className="text-sm">
             <p className="text-gray-500">Entry fee</p>
@@ -241,6 +265,7 @@ const BottomActionBar = ({ entryFee, qrCodeUrl }) => {
           </button>
         </div>
       </div>
+
       {showSheet && (
         <div className="fixed inset-0 z-20 bg-black/40 flex justify-center items-end">
           <div className="w-full max-w-[480px] bg-white rounded-t-2xl p-6">
@@ -282,10 +307,19 @@ const BottomActionBar = ({ entryFee, qrCodeUrl }) => {
 
             <button
               onClick={handleSubmit}
+              disabled={loading}
               className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-medium"
             >
-              Submit Payment Details
+              {loading ? "Submitting..." : "Submit Payment Details"}
             </button>
+          </div>
+        </div>
+      )}
+
+      {message && (
+        <div className="fixed bottom-20 max-w-[480px] mx-auto inset-x-0 px-4 z-20">
+          <div className="bg-green-100 text-green-700 p-3 rounded-lg text-sm text-center shadow">
+            {message}
           </div>
         </div>
       )}

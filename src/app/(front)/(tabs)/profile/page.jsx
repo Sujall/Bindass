@@ -11,7 +11,7 @@ import {
   FaUser,
   FaWallet,
 } from "react-icons/fa";
-import { getUserProfile } from "@/api/apiClient"; // Adjust if your path differs
+import { getUserProfile, logoutUser } from "@/api/apiClient"; // Adjust if your path differs
 import { useRouter } from "next/navigation";
 import { getInitials } from "@/lib/getInitails";
 
@@ -32,9 +32,13 @@ export default function ProfilePage() {
     fetchProfile();
   }, [router]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
+  const handleLogout = async () => {
+    try{
+      await logoutUser();
+      router.push("/login");
+    } catch {
+      console.log("Error while logging out.")
+    }
   };
 
   if (!user) {
