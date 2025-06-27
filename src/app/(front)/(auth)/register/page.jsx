@@ -3,6 +3,7 @@
 import { completeRegistration, initiateRegistration } from "@/api/apiClient";
 import { useState } from "react";
 import { FiUser, FiPhone, FiMapPin, FiMail, FiLock } from "react-icons/fi";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
   const [step, setStep] = useState(1);
@@ -90,10 +91,11 @@ export default function RegisterPage() {
         mobile: phone,
         address,
       });
-      alert("OTP sent to email");
+      toast.success("OTP sent to your email.");
       nextStep();
+      setLoading(false);
     } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong.");
+      toast.error(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -112,10 +114,13 @@ export default function RegisterPage() {
 
     try {
       await completeRegistration({ email, otp, password });
-      alert("Registration successful!");
-      window.location.href = "/login";
+      toast.success("Registration successful!");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1200);
+      setLoading(false);
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed.");
+      toast.error(err.response?.data?.message || "Registration failed.");
     } finally {
       setLoading(false);
     }
@@ -234,16 +239,16 @@ export default function RegisterPage() {
         {step === 3 && (
           <>
             <label className="text-sm block mb-2">6-digit OTP</label>
-             <div className="flex items-center bg-white/10 border border-white/20 rounded-md px-4 py-2 mb-1">
-            <input
-              type="text"
-              name="otp"
-              value={formData.otp}
-              onChange={handleChange}
-              className="bg-transparent flex-1 outline-none text-white placeholder-white/50"
-              placeholder="Enter OTP"
-            />
-             </div>
+            <div className="flex items-center bg-white/10 border border-white/20 rounded-md px-4 py-2 mb-1">
+              <input
+                type="text"
+                name="otp"
+                value={formData.otp}
+                onChange={handleChange}
+                className="bg-transparent flex-1 outline-none text-white placeholder-white/50"
+                placeholder="Enter OTP"
+              />
+            </div>
             {fieldErrors.otp && (
               <p className="text-red-300 text-sm mb-4">{fieldErrors.otp}</p>
             )}

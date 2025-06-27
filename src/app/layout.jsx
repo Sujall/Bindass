@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata = {
@@ -21,7 +22,10 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#1a3144" />
       </head>
 
-      <body className="bg-[#1a3144] min-h-screen">{children}</body>
+      <body className="bg-[#1a3144] min-h-screen">
+        {children}
+        <Toaster position="top-center" richColors />
+      </body>
     </html>
   );
 }

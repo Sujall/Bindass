@@ -3,6 +3,7 @@
 import { loginUser } from "@/api/apiClient";
 import { useState } from "react";
 import { FiArrowLeft, FiMail, FiLock } from "react-icons/fi";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -35,35 +36,31 @@ export default function LoginPage() {
     }
 
     try {
-      // Call the API
       const response = await loginUser(email, password);
-
-      // Assuming the response contains token and user information
       const token = response.token;
       const user = response.user;
-      console.log("User", response);
 
       if (token) {
-        localStorage.setItem("authToken", token); // Store JWT
-        console.log("Login successful, token saved:", token);
-
-        // Optional: store user info if needed
+        localStorage.setItem("authToken", token);
         localStorage.setItem("userRole", user.role);
-        console.log("userRole", user.role);
 
-        // Redirect based on user role
-        if (user.role === "admin") {
-          window.location.href = "/dashboard";
-        } else {
-          window.location.href = "/home";
-        }
+        toast.success("Login successful!");
+
+        // Delay redirect slightly so the user sees the toast
+        setTimeout(() => {
+          if (user.role === "admin") {
+            window.location.href = "/dashboard";
+          } else {
+            window.location.href = "/home";
+          }
+        }, 1000);
       } else {
         throw new Error("Token not found in response");
       }
     } catch (err) {
       const apiError =
         err.response?.data?.message || "Login failed. Please try again.";
-      alert(apiError);
+      toast.error(apiError);
     }
   };
 

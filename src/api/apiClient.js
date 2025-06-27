@@ -3,7 +3,7 @@ import axios from "axios";
 // Create Axios instance
 const apiClient = axios.create({
   // baseURL: "https://bindass-backend.vercel.app/api",
-  baseURL: "http://192.168.1.151:5002/api",
+  baseURL: "http://192.168.29.193:5000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -205,28 +205,30 @@ export const deleteBannerById = async (id) => {
 };
 
 // Admin Actions: Create Giveaway
-
-export const uploadGiveawayMedia = async (giveawayImage, qrCode) => {
+export async function uploadGiveawayMedia(giveawayImageFile, qrCodeFile) {
   const formData = new FormData();
-  formData.append("giveawayImage", giveawayImage);
-  formData.append("qrCode", qrCode);
-
-  for (let [key, val] of formData.entries()) {
-    console.log("FormData:", key, val);
-  }
+  formData.append("giveawayImage", giveawayImageFile);
+  formData.append("qrCode", qrCodeFile);
 
   try {
     const response = await apiClient.post("/admin/upload-images", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      headers: { "Content-Type": "multipart/form-data" },
     });
-    return response.data;
+
+    const { giveawayImageUrl, qrCodeUrl } = response.data;
+
+    console.log("Uploaded image URLs:", { giveawayImageUrl, qrCodeUrl });
+
+    // Return in correct format expected by the backend
+    return {
+      giveawayImageUrl,
+      qrCodeUrl,
+    };
   } catch (error) {
-    console.error("Upload failed:", error.response?.data || error.message);
-    throw error;
+    console.error("Error uploading images:", error);
+    throw new Error("Image upload failed");
   }
-};
+}
 
 // Submit the giveaway form with image URLs
 export const createGiveaway = async (formPayload) => {

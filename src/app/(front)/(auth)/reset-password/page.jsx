@@ -4,10 +4,11 @@ import { sendResetOTP, submitNewPassword } from "@/api/apiClient";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FiMail, FiKey } from "react-icons/fi";
+import { toast } from "sonner";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  
+
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -15,15 +16,14 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-
   const handleSendOtp = async () => {
     try {
       setLoading(true);
       await sendResetOTP(email);
+      toast.success("OTP sent to your email.");
       setStep(2);
-      setMessage("OTP sent to your email.");
     } catch (err) {
-      setMessage(err.message || "Failed to send OTP.");
+      toast.error(err?.response?.data?.message || "Failed to send OTP.");
     } finally {
       setLoading(false);
     }
@@ -33,10 +33,12 @@ export default function ResetPasswordPage() {
     try {
       setLoading(true);
       await submitNewPassword({ email, otp, newPassword });
-      setMessage("Password reset successfully. You can now login.");
-      router.push("/login");
+      toast.success("Password reset successfully. Redirecting...");
+      setTimeout(() => {
+        router.push("/login");
+      }, 1500);
     } catch (err) {
-      setMessage(err.message || "Reset failed.");
+      toast.error(err?.response?.data?.message || "Password reset failed.");
     } finally {
       setLoading(false);
     }

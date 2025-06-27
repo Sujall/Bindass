@@ -16,6 +16,7 @@ import {
   uploadBannerImage,
 } from "@/api/apiClient";
 import { DialogBody } from "@material-tailwind/react";
+import { toast } from "sonner";
 
 export default function BannerListPage() {
   const [banners, setBanners] = useState([]);
@@ -27,10 +28,21 @@ export default function BannerListPage() {
 
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
-
+  
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
+    const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
+
     if (file) {
+      // Check file type
+      if (!allowedFormats.includes(file.type)) {
+        setError("Only JPG, JPEG, and PNG formats are allowed.");
+        setSelectedFile(null);
+        setPreviewUrl(null);
+        return;
+      }
+
+      // Check file size
       if (file.size > 2 * 1024 * 1024) {
         setError("Image size should be less than 2MB.");
         setSelectedFile(null);
@@ -67,9 +79,11 @@ export default function BannerListPage() {
       setBanners((prev) => [...prev, data.media.url]);
       setSelectedFile(null);
       setPreviewUrl(null);
+      toast.success("Banner uploaded successfully");
       setOpen(false);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to upload banner.");
+      toast.error("Failed to upload Banner");
     } finally {
       setLoading(false);
     }
@@ -81,9 +95,10 @@ export default function BannerListPage() {
       await deleteBannerById(selectedBanner._id);
       setBanners((prev) => prev.filter((b) => b._id !== selectedBanner._id));
       setSelectedBanner(null);
+      toast.success("Banner Deleted Successfully");
       setConfirmOpen(false);
     } catch (err) {
-      alert("Failed to delete banner");
+      toast.error("Failed to delete Banner");
     }
   };
 
@@ -110,7 +125,7 @@ export default function BannerListPage() {
             <div className="space-y-4">
               <input
                 type="file"
-                accept="image/*"
+                accept=".jpg,.jpeg,.png"
                 onChange={handleFileChange}
                 className="w-full border p-2 rounded-md"
               />

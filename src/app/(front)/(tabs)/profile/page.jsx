@@ -14,9 +14,12 @@ import {
 import { getUserProfile, logoutUser } from "@/api/apiClient"; // Adjust if your path differs
 import { useRouter } from "next/navigation";
 import { getInitials } from "@/lib/getInitails";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -32,12 +35,13 @@ export default function ProfilePage() {
     fetchProfile();
   }, [router]);
 
-  const handleLogout = async () => {
-    try{
+  const handleLogoutConfirmed = async () => {
+    try {
       await logoutUser();
+      toast.success("Logged out successfully");
       router.push("/login");
     } catch {
-      console.log("Error while logging out.")
+      toast.error("Error while logging out.");
     }
   };
 
@@ -120,10 +124,40 @@ export default function ProfilePage() {
             icon={<FaSignOutAlt className="text-red-500" />}
             label="Log Out"
             textColor="text-red-500"
-            onClick={handleLogout}
+            onClick={() => setShowLogoutDialog(true)}
           />
         </Section>
       </div>
+
+      {showLogoutDialog && (
+        <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg w-80">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              Confirm Logout
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Are you sure you want to log out?
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setShowLogoutDialog(false)}
+                className="px-4 py-2 text-sm rounded-md text-gray-700 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowLogoutDialog(false);
+                  handleLogoutConfirmed();
+                }}
+                className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -164,7 +198,7 @@ function SubItem({ icon, label, textColor = "text-gray-900", onClick }) {
   return (
     <button
       onClick={onClick}
-      className="flex items-center justify-between w-full px-4 py-4 hover:bg-gray-50 transition"
+      className="cursor-pointer flex items-center justify-between w-full px-4 py-4 hover:bg-gray-50 transition"
     >
       <div className="flex items-center gap-3">
         {icon}

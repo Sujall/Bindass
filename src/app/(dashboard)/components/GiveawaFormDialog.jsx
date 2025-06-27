@@ -24,8 +24,8 @@ export function GiveawayFormDialog() {
   });
 
   const [uploadedUrls, setUploadedUrls] = useState({
-    giveawayImageUrl: "",
-    qrCodeUrl: "",
+    giveawayImage: "",
+    qrCode: "",
   });
 
   const [formData, setFormData] = useState({
@@ -56,7 +56,11 @@ export function GiveawayFormDialog() {
         imageFiles.giveawayImage,
         imageFiles.qrCode
       );
+
+      console.log("Image upload success:", giveawayImageUrl, qrCodeUrl); // ✅ Check this
+
       setUploadedUrls({ giveawayImageUrl, qrCodeUrl });
+
       setStep(2);
     } catch (err) {
       console.error("Image upload failed:", err);
@@ -74,11 +78,20 @@ export function GiveawayFormDialog() {
   const handleSubmitGiveaway = async (e) => {
     e.preventDefault();
 
+    console.log("uploadedUrls", uploadedUrls); // Debug
+
+    if (!uploadedUrls.giveawayImageUrl || !uploadedUrls.qrCodeUrl) {
+      alert("Image URLs missing. Please re-upload.");
+      return;
+    }
+
     const payload = {
       ...formData,
-      giveawayImage: uploadedUrls.giveawayImageUrl,
-      qrCode: uploadedUrls.qrCodeUrl,
+      giveawayImageUrl: uploadedUrls.giveawayImageUrl,
+      qrCodeUrl: uploadedUrls.qrCodeUrl,
     };
+
+    console.log("Creating giveaway with:", payload);
 
     try {
       setLoading(true);
