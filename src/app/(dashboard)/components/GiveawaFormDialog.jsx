@@ -12,6 +12,7 @@ import apiClient, {
   uploadGiveawayMedia,
   createGiveaway,
 } from "@/api/apiClient";
+import { toast } from "sonner";
 
 export function GiveawayFormDialog() {
   const [step, setStep] = useState(1);
@@ -24,8 +25,8 @@ export function GiveawayFormDialog() {
   });
 
   const [uploadedUrls, setUploadedUrls] = useState({
-    giveawayImage: "",
-    qrCode: "",
+    giveawayImageUrl: "",
+    qrCodeUrl: "",
   });
 
   const [formData, setFormData] = useState({
@@ -34,6 +35,7 @@ export function GiveawayFormDialog() {
     description: "",
     fee: "",
     totalSlots: "",
+    numberOfWinners: "",
     endDate: "",
     categories: "",
   });
@@ -46,7 +48,7 @@ export function GiveawayFormDialog() {
   const handleImageUpload = async (e) => {
     e.preventDefault();
     if (!imageFiles.giveawayImage || !imageFiles.qrCode) {
-      alert("Please upload both images.");
+      toast.error("Please upload both images.");
       return;
     }
 
@@ -57,14 +59,12 @@ export function GiveawayFormDialog() {
         imageFiles.qrCode
       );
 
-      console.log("Image upload success:", giveawayImageUrl, qrCodeUrl); // ✅ Check this
-
       setUploadedUrls({ giveawayImageUrl, qrCodeUrl });
-
+      toast.success("Images uploaded successfully!");
       setStep(2);
     } catch (err) {
       console.error("Image upload failed:", err);
-      alert("Failed to upload images. Please try again.");
+      toast.error("Failed to upload images. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -78,10 +78,21 @@ export function GiveawayFormDialog() {
   const handleSubmitGiveaway = async (e) => {
     e.preventDefault();
 
-    console.log("uploadedUrls", uploadedUrls); // Debug
-
     if (!uploadedUrls.giveawayImageUrl || !uploadedUrls.qrCodeUrl) {
-      alert("Image URLs missing. Please re-upload.");
+      toast.error("Image URLs missing. Please re-upload.");
+      return;
+    }
+
+    // Basic validation example
+    if (
+      !formData.title ||
+      !formData.subTitle ||
+      !formData.fee ||
+      !formData.totalSlots ||
+      !formData.numberOfWinners ||
+      !formData.endDate
+    ) {
+      toast.error("Please fill all required fields.");
       return;
     }
 
@@ -91,18 +102,15 @@ export function GiveawayFormDialog() {
       qrCodeUrl: uploadedUrls.qrCodeUrl,
     };
 
-    console.log("Creating giveaway with:", payload);
-
     try {
       setLoading(true);
-      const result = await createGiveaway(payload);
-      console.log("Giveaway created:", result);
-      alert("Giveaway created successfully!");
+      await createGiveaway(payload);
+      toast.success("Giveaway created successfully!");
       resetAll();
       setOpen(false);
     } catch (err) {
       console.error("Giveaway submission failed:", err);
-      alert("Failed to submit giveaway. Check your input.");
+      toast.error("Failed to create giveaway. Check your input.");
     } finally {
       setLoading(false);
     }
@@ -118,6 +126,7 @@ export function GiveawayFormDialog() {
       description: "",
       fee: "",
       totalSlots: "",
+      numberOfWinners: "",
       endDate: "",
       categories: "",
     });
@@ -204,28 +213,44 @@ export function GiveawayFormDialog() {
               />
             </div>
 
-            <div>
-              <label className="block font-medium mb-1">Entry Fee (₹)</label>
-              <input
-                type="number"
-                name="fee"
-                value={formData.fee}
-                onChange={handleInputChange}
-                className="w-full border p-2 rounded-md"
-                required
-              />
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <div>
+                <label className="block font-medium mb-1">Entry Fee (₹)</label>
+                <input
+                  type="text"
+                  name="fee"
+                  value={formData.fee}
+                  onChange={handleInputChange}
+                  className="w-full border p-2 rounded-md"
+                  required
+                />
+              </div>
 
-            <div>
-              <label className="block font-medium mb-1">Total Seats</label>
-              <input
-                type="number"
-                name="totalSlots"
-                value={formData.totalSlots}
-                onChange={handleInputChange}
-                className="w-full border p-2 rounded-md"
-                required
-              />
+              <div>
+                <label className="block font-medium mb-1">Total Seats</label>
+                <input
+                  type="text"
+                  name="totalSlots"
+                  value={formData.totalSlots}
+                  onChange={handleInputChange}
+                  className="w-full border p-2 rounded-md"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Number of Winners
+                </label>
+                <input
+                  type="text"
+                  name="numberOfWinners"
+                  value={formData.numberOfWinners}
+                  onChange={handleInputChange}
+                  className="w-full border p-2 rounded-md"
+                  required
+                />
+              </div>
             </div>
 
             <div>

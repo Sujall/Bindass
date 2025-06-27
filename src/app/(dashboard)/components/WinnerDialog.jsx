@@ -162,25 +162,27 @@ export function WinnerDialog({ giveaway, winners, setWinners }) {
             </div>
           )}
 
-          <Button
-            onClick={handleSubmitWinners}
-            className="bg-green-600 text-white hover:bg-green-700 mt-4"
-            disabled={
-              submitting || selectedWinners.length === 0 || winnersFinalized
-            }
-          >
-            {submitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                Submitting...
-              </>
-            ) : (
-              "Mark as Winner"
-            )}
-          </Button>
+          {!winnersFinalized && (
+            <Button
+              onClick={handleSubmitWinners}
+              className="bg-green-600 text-white hover:bg-green-700 mt-4"
+              disabled={
+                submitting || selectedWinners.length === 0 || winnersFinalized
+              }
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Submitting...
+                </>
+              ) : (
+                "Mark as Winner"
+              )}
+            </Button>
+          )}
 
           {winnersFinalized && (
-            <p className="text-sm text-green-600 font-medium mt-2">
+            <p className="text-sm text-green-600 font-medium mt-2 text-center">
               Winners already selected.
             </p>
           )}
@@ -210,19 +212,19 @@ const WinnerCheckboxCard = ({
         <div>
           <div className="font-medium flex items-center gap-2">
             {participant.userId?.fullName || "Unnamed User"}
-            {isWinner && (
-              <span className="flex items-center text-yellow-600 text-xs font-semibold">
-                <Crown className="w-4 h-4 mr-1" />
-                Winner
-              </span>
-            )}
           </div>
           <div className="text-sm text-gray-500">
             {participant.userId?.email}
           </div>
         </div>
 
-        {isChecked && (
+        {isWinner && (
+          <span className="flex items-center text-yellow-600 text-xs font-semibold">
+            <Crown className="w-4 h-4 mr-1" />
+            Winner
+          </span>
+        )}
+        {isChecked && !isWinner && (
           <p className="flex gap-2 items-center">
             <Check color="green" />
             <span className="text-green-600 text-sm font-semibold">

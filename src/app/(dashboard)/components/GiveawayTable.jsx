@@ -27,7 +27,7 @@ export function GiveawayTable({ winners, setWinners }) {
     fetchGiveaways();
   }, []);
 
-  if (loading) return <div className="p-6">Loading giveaways...</div>;
+  if (loading) return <div className="p-6 flex justify-center">Loading giveaways...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
 
   return (

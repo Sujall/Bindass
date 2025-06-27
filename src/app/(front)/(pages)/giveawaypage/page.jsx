@@ -4,17 +4,30 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+// Skeleton component
+const SkeletonCard = () => (
+  <div className="bg-white border border-gray-200 shadow-md rounded-xl overflow-hidden w-full animate-pulse">
+    <div className="w-full aspect-[4/2] bg-gray-200" />
+    <div className="p-4 space-y-3">
+      <div className="h-5 bg-gray-200 rounded w-3/4" />
+      <div className="h-4 bg-gray-200 rounded w-full" />
+      <div className="h-4 bg-gray-200 rounded w-5/6" />
+      <div className="h-2 bg-gray-200 rounded w-full mt-2" />
+      <div className="h-4 bg-gray-200 rounded w-1/2 mt-2" />
+      <div className="h-10 bg-gray-300 rounded w-full mt-3" />
+    </div>
+  </div>
+);
+
 export default function GiveawayPage() {
   const [search, setSearch] = useState("");
   const [giveaways, setGiveaways] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch giveaways on component mount
   useEffect(() => {
     const fetchGiveaways = async () => {
       try {
         const res = await getAllGiveaways();
-
         const giveaways = Array.isArray(res) ? res : res.giveaways || [];
         setGiveaways(giveaways);
       } catch (err) {
@@ -27,16 +40,18 @@ export default function GiveawayPage() {
     fetchGiveaways();
   }, []);
 
-  // Filter giveaways based on search
   const filterGiveaways = (items) =>
     items.filter((item) =>
       item.title?.toLowerCase().includes(search.toLowerCase())
     );
 
   const renderGiveawayCard = (item) => {
-    const current = item.participants?.length || 0;
-    const total = item.totalSlots || 1;
-    const percentage = Math.round((current / total) * 100);
+    const current = item.participantsCount ?? item.participants?.length ?? 0;
+    const total = item.totalSlots;
+    const percentage = Math.min(
+      100,
+      Math.max(0, Math.round((current / total) * 100))
+    );
     const isAvailable = current < total;
 
     return (
@@ -81,7 +96,7 @@ export default function GiveawayPage() {
 
           <div className="w-full bg-gray-200 h-2 rounded-full mt-1">
             <div
-              className="h-full rounded-full bg-blue-700"
+              className="h-full rounded-full bg-green-700"
               style={{ width: `${percentage}%` }}
             />
           </div>
@@ -94,7 +109,7 @@ export default function GiveawayPage() {
           </div>
 
           <Link
-            href={isAvailable ? `/giveaway/${item._id}` : "#"}
+            href={isAvailable ? `/giveaway/${item.id}` : "#"}
             className={`block w-full text-center text-white font-bold py-2 mt-3 rounded-lg transition duration-200 ${
               isAvailable
                 ? "bg-gray-900 hover:bg-black"
@@ -112,7 +127,7 @@ export default function GiveawayPage() {
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-700 mb-2 text-center">
           Search Giveaways
         </h1>
@@ -123,12 +138,14 @@ export default function GiveawayPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-      </div>
+      </div> */}
 
       {isLoading ? (
-        <p className="text-center text-gray-600 font-medium">
-          Loading giveaways...
-        </p>
+        <div className="space-y-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
       ) : (
         <div className="space-y-6">
           {filterGiveaways(giveaways).map(renderGiveawayCard)}

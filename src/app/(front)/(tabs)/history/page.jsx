@@ -1,6 +1,7 @@
 "use client";
 
 import apiClient from "@/api/apiClient";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaClock, FaCheckCircle, FaUsers } from "react-icons/fa";
 
@@ -23,38 +24,29 @@ export default function HistoryPage() {
   const [participation, setParticipation] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const fetchHistory = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await fetch("/api/user/giveaway-history"); // Adjust API path if needed
-  //       const data = await res.json();
-  //       setParticipation(data.participation || []);
-  //     } catch (err) {
-  //       console.error("Failed to fetch history", err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchHistory();
-  // }, []);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchHistory = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
       setLoading(true);
       try {
         const res = await apiClient.get("/giveaways/history");
         setParticipation(res.data.participation || []);
       } catch (err) {
         console.error("Failed to fetch giveaway history:", err);
+        router.push("/login"); // fallback in case token is invalid
       } finally {
         setLoading(false);
       }
     };
 
     fetchHistory();
-  }, []);
+  }, [router]);
 
   const now = new Date();
 
@@ -63,7 +55,7 @@ export default function HistoryPage() {
 
     if (activeTab === "active") return !isEnded;
     if (activeTab === "completed") return isEnded;
-    if (activeTab === "stopped") return false; // Logic for "stopped" goes here if applicable
+    if (activeTab === "stopped") return false;
     return true;
   });
 
@@ -90,7 +82,18 @@ export default function HistoryPage() {
 
         {/* Content */}
         {loading ? (
-          <div className="text-center text-gray-500 py-10">Loading...</div>
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="bg-white p-4 rounded-lg shadow-sm animate-pulse"
+              >
+                <div className="h-4 bg-gray-300 rounded w-3/4 mb-2" />
+                <div className="h-3 bg-gray-200 rounded w-1/2 mb-2" />
+                <div className="h-3 bg-gray-200 rounded w-1/4" />
+              </div>
+            ))}
+          </div>
         ) : filtered.length === 0 ? (
           <div className="text-center text-gray-500 text-sm font-medium py-20">
             No giveaways found
@@ -100,10 +103,10 @@ export default function HistoryPage() {
             {filtered.map(({ giveaway, participant }, index) => (
               <div key={index} className="bg-white p-4 rounded-lg shadow-sm">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-col gap-1">
                     <h2 className="text-lg font-semibold">{giveaway.title}</h2>
                     <p className="text-sm text-gray-500">{giveaway.subTitle}</p>
-                    <p className={"text-sm text-gray-500"}>
+                    <p className="text-sm text-gray-500">
                       Status:{" "}
                       <span
                         className={`capitalize font-bold ${

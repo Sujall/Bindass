@@ -16,11 +16,6 @@ import {
 import Image from "next/image";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/favicon.ico",
-  },
   navMain: [
     {
       title: "Home",
@@ -41,7 +36,7 @@ const data = {
   ],
 };
 
-export function AppSidebar(props) {
+export function AppSidebar({ user, logoutUser, ...props }) {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader className={"border-b-2 border-gray-300"}>
@@ -63,6 +58,7 @@ export function AppSidebar(props) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent className="gap-0">
         <SidebarGroup>
           <SidebarMenu>
@@ -76,9 +72,15 @@ export function AppSidebar(props) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {user ? (
+          <NavUser user={user} logoutUser={logoutUser} />
+        ) : (
+          <div className="text-sm text-gray-500 px-4">Loading user...</div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
 }
+

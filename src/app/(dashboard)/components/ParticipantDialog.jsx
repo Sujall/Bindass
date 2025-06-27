@@ -40,16 +40,26 @@ export function ParticipantDialog({ giveaway }) {
       const res = await apiClient.put(`/admin/participants/${userId}/status`, {
         status,
       });
+      console.log("Before update:", participants);
       const updated = res.data.participant;
+      console.log("After update:", participants);
+
+      const updatedUserId = updated.userId._id?.toString();
 
       setParticipants((prev) =>
-        prev.map((p) =>
-          p.userId._id === updated.userId._id ? { ...p, ...updated } : p
-        )
+        prev.map((p) => {
+          const currentId =
+            typeof p.userId === "object" ? p.userId._id?.toString() : p.userId;
+          const updatedId = updated.userId._id?.toString();
+          return currentId === updatedId ? { ...p, ...updated } : p;
+        })
       );
-
+      console.log("Updating participant in UI:", {
+        updatedId: updated.userId._id,
+        existingIds: participants.map((p) => p.userId._id),
+      });
       toast.success(`${updated.userId.fullName} marked as ${status}.`);
-      setOpen(false);
+      // setOpen(false);
     } catch (err) {
       console.error("Status update error:", err);
       toast.error("Failed to update participant status.");

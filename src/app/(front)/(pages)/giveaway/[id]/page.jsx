@@ -4,7 +4,13 @@ import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { FaUsers, FaClock } from "react-icons/fa";
 import { MdCheckCircle } from "react-icons/md";
-import { getGiveawayByID, participateInGiveaway } from "@/api/apiClient";
+import {
+  getGiveawayByID,
+  getLoggedInUserId,
+  getUserGiveawayHistoryByID,
+  participateInGiveaway,
+} from "@/api/apiClient";
+import { toast } from "sonner";
 
 // The main page component
 const GiveawayDetailPage = () => {
@@ -19,7 +25,6 @@ const GiveawayDetailPage = () => {
     const fetchGiveaway = async () => {
       try {
         const data = await getGiveawayByID(id);
-        console.log(data);
         setItem(data.giveaway);
       } catch (err) {
         console.error("Error fetching giveaway:", err);
@@ -31,6 +36,11 @@ const GiveawayDetailPage = () => {
 
     if (id) fetchGiveaway();
   }, [id]);
+
+  const userId = getLoggedInUserId(); // Extracted from token
+  const hasParticipated = item?.participantsList?.some(
+    (p) => p.userId === userId
+  );
 
   if (loading) {
     return (
@@ -57,8 +67,6 @@ const GiveawayDetailPage = () => {
   const current = item.participantsCount || 0;
   const total = item.totalSlots;
   const percentage = total ? Math.round((current / total) * 100) : 0;
-
-  console.log(item._id)
 
   return (
     <div className="max-w-[480px] mx-auto px-2 py-2 bg-white">
@@ -161,7 +169,9 @@ const GiveawayDetailPage = () => {
           <BottomActionBar
             entryFee={item.fee}
             qrCodeUrl={item.qrCodeUrl}
-            giveawayId={item._id}
+            giveawayId={item.id}
+            userId={userId}
+            hasParticipated={hasParticipated}
           />
         </div>
       )}
@@ -170,20 +180,32 @@ const GiveawayDetailPage = () => {
       {tab === "participants" && (
         <div className="pt-4 bg-gray-50">
           <h2 className="text-sm font-semibold text-gray-800 mb-3 px-4">
-            Most Recent
+            Most Recent Verified Participants
           </h2>
           <div className="bg-white rounded-xl shadow-sm border overflow-hidden divide-y">
-            {item.participants && item.participants.length > 0 ? (
-              item.participants.slice(0, 5).map((user, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-4">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm font-medium">
-                    👤
-                  </div>
-                  <span className="text-sm text-gray-900">
-                    {user.name || "Anonymous"}
-                  </span>
-                </div>
-              ))
+            {item.participantsList && item.participantsList.length > 0 ? (
+              item.participantsList
+                .filter((participant) => participant.status === "verified")
+                .slice(0, 5)
+                .map((participant, idx) => {
+                  console.log(participant.status);
+                  return (
+                    <div key={idx} className="flex items-center gap-3 p-4">
+                      <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                        {participant.profileImage && (
+                          <span className="text-gray-600 text-sm font-medium">
+                            👤
+                          </span>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {participant.name || "Anonymous"}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })
             ) : (
               <div className="p-4 text-sm text-gray-600 text-center">
                 No participants yet. Be the first to join!
@@ -196,15 +218,52 @@ const GiveawayDetailPage = () => {
       {/* Winner Tab */}
       {tab === "winner" && (
         <div className="bg-gray-50 pt-6 pb-24 flex justify-center items-center flex-col">
-          <div className="bg-white rounded-xl shadow-sm border w-full max-w-md px-6 py-8 text-center">
-            <div className="text-4xl text-gray-400 mb-4">⏰</div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-1">
-              Winner Pending
-            </h3>
-            <p className="text-sm text-gray-500">
-              The winner will be announced after the giveaway ends
-            </p>
-          </div>
+          {item.winnersList && item.winnersList.length > 0 ? (
+            <div className="bg-white rounded-xl shadow-sm border w-full px-2 py-8 text-center">
+              <h3 className="text-lg font-semibold text-gray-800 mb-3">
+                🎉 Winner{item.winnersList.length > 1 ? "s" : ""} Announced!
+              </h3>
+              <div className="border border-gray-200"></div>
+              <div className="space-y-4 mt-4">
+                {item.winnersList.map((winner, idx) => (
+                  <div
+                    key={idx}
+                    className="px-4 flex items-center gap-3 text-left"
+                  >
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200">
+                      {winner.profileImage ? (
+                        <Image
+                          src={winner.profileImage}
+                          alt={winner.name || "Winner"}
+                          width={40}
+                          height={40}
+                          className="rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-gray-500 text-xl">
+                          🏆
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{winner.name}</p>
+                      <p className="text-xs text-gray-500">{winner.email}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl shadow-sm border w-full max-w-md px-6 py-8 text-center">
+              <div className="text-4xl text-gray-400 mb-4">⏰</div>
+              <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                Winner Pending
+              </h3>
+              <p className="text-sm text-gray-500">
+                The winner will be announced after the giveaway ends
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -213,11 +272,33 @@ const GiveawayDetailPage = () => {
 
 export default GiveawayDetailPage;
 
-const BottomActionBar = ({ entryFee, qrCodeUrl, giveawayId }) => {
+const BottomActionBar = ({ entryFee, qrCodeUrl, giveawayId, userId }) => {
   const [showSheet, setShowSheet] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [hasParticipated, setHasParticipated] = useState(false);
+
+  const router = useRouter();
+
+  // Check if user has already participated
+  useEffect(() => {
+    const checkParticipation = async () => {
+      try {
+        const res = await getUserGiveawayHistoryByID(userId);
+        const alreadyParticipated = res.participation.some(
+          (p) => p.giveaway._id === giveawayId
+        );
+        setHasParticipated(alreadyParticipated);
+      } catch (err) {
+        console.error("Error checking participation:", err);
+      }
+    };
+
+    if (userId && giveawayId) {
+      checkParticipation();
+    }
+  }, [userId, giveawayId]);
 
   const handlePayment = () => {
     setShowSheet(true);
@@ -225,7 +306,7 @@ const BottomActionBar = ({ entryFee, qrCodeUrl, giveawayId }) => {
 
   const handleSubmit = async () => {
     if (!transactionId) {
-      alert("Please enter the Transaction ID");
+      toast.error("Please enter the Transaction ID");
       return;
     }
 
@@ -241,6 +322,7 @@ const BottomActionBar = ({ entryFee, qrCodeUrl, giveawayId }) => {
       setMessage(response.message || "Successfully registered!");
       setTransactionId("");
       setShowSheet(false);
+      setHasParticipated(true); // Update UI immediately
     } catch (err) {
       console.error("Participation error:", err);
       setMessage(err.message || "Something went wrong");
@@ -258,15 +340,26 @@ const BottomActionBar = ({ entryFee, qrCodeUrl, giveawayId }) => {
             <p className="font-semibold text-gray-900">₹{entryFee}</p>
           </div>
           <button
-            onClick={handlePayment}
-            className="bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-md"
+            onClick={() => {
+              if (!userId) {
+                router.push("/login");
+              } else {
+                handlePayment();
+              }
+            }}
+            disabled={hasParticipated}
+            className={`px-5 py-2 rounded-full text-sm font-medium shadow-md ${
+              hasParticipated
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-blue-600 text-white"
+            }`}
           >
-            Pay Now
+            {hasParticipated ? "Already Joined" : "Pay Now"}
           </button>
         </div>
       </div>
 
-      {showSheet && (
+      {showSheet && !hasParticipated && (
         <div className="fixed inset-0 z-20 bg-black/40 flex justify-center items-end">
           <div className="w-full max-w-[480px] bg-white rounded-t-2xl p-6">
             <div className="flex justify-between items-center mb-4">

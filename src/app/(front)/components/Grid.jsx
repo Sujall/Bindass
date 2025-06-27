@@ -3,99 +3,67 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaRupeeSign, FaUsers } from "react-icons/fa";
-import axios from "axios";
 import { getAllGiveaways } from "@/api/apiClient";
+
+const SkeletonCard = () => (
+  <div className="bg-white border-2 border-gray-300 rounded-xl shadow-sm animate-pulse p-4 space-y-4">
+    <div className="w-full aspect-[4/2.2] bg-gray-200 rounded-md" />
+    <div className="h-5 bg-gray-200 rounded w-3/4" />
+    <div className="space-y-2">
+      <div className="h-4 bg-gray-200 rounded w-full" />
+      <div className="h-4 bg-gray-200 rounded w-5/6" />
+      <div className="h-4 bg-gray-200 rounded w-2/3" />
+    </div>
+    <div className="h-4 bg-gray-200 rounded w-full" />
+    <div className="h-10 bg-gray-200 rounded w-full mt-2" />
+  </div>
+);
 
 const Grid = () => {
   const [giveaways, setGiveaways] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const fetchGiveaways = async () => {
-  //     try {
-  //       const res = await getAllGiveaways(); // Adjust the path if needed
-  //       const data = await res.json();
-
-  //       if (res.ok) {
-  //         // Map API data to expected format
-  //         const formatted = data.giveaways.map((g) => ({
-  //           id: g.id,
-  //           title: g.title,
-  //           entryFee: g.fee,
-  //           seats: {
-  //             current: g.participantsCount,
-  //             total: g.totalSlots,
-  //           },
-  //           image: g.giveawayImageUrl || "/images/default-thumbnail.png",
-  //           bulletPoints: [
-  //             {
-  //               text: g.subTitle,
-  //               color: "text-green-500",
-  //             },
-  //             {
-  //               text: `Seats: ${g.participantsCount}/${g.totalSlots}`,
-  //               color: "text-blue-500",
-  //             },
-  //             {
-  //               text: `Entry fee: ₹${g.fee}`,
-  //               color: "text-yellow-500",
-  //             },
-  //           ],
-  //         }));
-  //         setGiveaways(formatted);
-  //       } else {
-  //         console.error("Error fetching giveaways:", data.message);
-  //       }
-  //     } catch (err) {
-  //       console.error("Fetch error:", err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchGiveaways();
-  // }, []);
-
   useEffect(() => {
-  const fetchGiveaways = async () => {
-    try {
-      const data = await getAllGiveaways(); // already returns parsed JSON
+    const fetchGiveaways = async () => {
+      try {
+        const data = await getAllGiveaways();
 
-      const formatted = data.giveaways.map((g) => ({
-        id: g.id,
-        title: g.title,
-        entryFee: g.fee,
-        seats: {
-          current: g.participantsCount,
-          total: g.totalSlots,
-        },
-        image: g.giveawayImageUrl || "/images/default-thumbnail.png",
-        bulletPoints: [
-          {
-            text: g.subTitle,
-            color: "text-green-500",
+        const formatted = data.giveaways.map((g) => ({
+          id: g.id,
+          title: g.title,
+          entryFee: g.fee,
+          seats: {
+            current: g.participantsCount,
+            total: g.totalSlots,
           },
-          {
-            text: `Seats: ${g.participantsCount}/${g.totalSlots}`,
-            color: "text-blue-500",
-          },
-          {
-            text: `Entry fee: ₹${g.fee}`,
-            color: "text-yellow-500",
-          },
-        ],
-      }));
+          image: g.giveawayImageUrl || "/images/default-thumbnail.png",
+          bulletPoints: [
+            {
+              text: g.subTitle,
+              color: "text-green-500",
+            },
+            {
+              text: `Seats: ${g.participantsCount}/${g.totalSlots}`,
+              color: "text-blue-500",
+            },
+            {
+              text: `Entry fee: ₹${g.fee}`,
+              color: "text-yellow-500",
+            },
+          ],
+        }));
 
-      setGiveaways(formatted);
-    } catch (err) {
-      console.error("Fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+        // Show only first 5 giveaways
+        setGiveaways(formatted.slice(0, 5));
+      } catch (err) {
+        console.error("Fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchGiveaways();
-}, []);
+    fetchGiveaways();
+  }, []);
 
   const renderGiveawayCard = (item) => {
     const { current, total } = item.seats;
@@ -120,29 +88,27 @@ const Grid = () => {
         <div className="p-4 space-y-3">
           <h3 className="font-bold text-xl text-gray-900">{item.title}</h3>
 
-          {item.bulletPoints && (
-            <ul className="space-y-1">
-              {item.bulletPoints.map((point, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className={`text-2xl leading-none ${point.color}`}>
-                    •
-                  </span>
-                  <span className="text-[15px] text-gray-800">
-                    {point.text.startsWith("Entry fee") ? (
-                      <>
-                        Entry fee:{" "}
-                        <span className="font-bold">
-                          {point.text.replace("Entry fee: ", "")}
-                        </span>
-                      </>
-                    ) : (
-                      point.text
-                    )}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <ul className="space-y-1">
+            {item.bulletPoints.map((point, index) => (
+              <li key={index} className="flex items-start gap-2">
+                <span className={`text-2xl leading-none ${point.color}`}>
+                  •
+                </span>
+                <span className="text-[15px] text-gray-800">
+                  {point.text.startsWith("Entry fee") ? (
+                    <>
+                      Entry fee:{" "}
+                      <span className="font-bold">
+                        {point.text.replace("Entry fee: ", "")}
+                      </span>
+                    </>
+                  ) : (
+                    point.text
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
 
           <div className="flex items-center justify-between text-sm mt-2">
             <div className="text-gray-700 flex items-center gap-1.5">
@@ -197,7 +163,11 @@ const Grid = () => {
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
       {loading ? (
-        <p className="text-center text-gray-500">Loading giveaways...</p>
+        <div className="space-y-5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
       ) : (
         <div className="space-y-5">{giveaways.map(renderGiveawayCard)}</div>
       )}

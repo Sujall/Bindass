@@ -1,9 +1,11 @@
 import axios from "axios";
+import {jwtDecode} from "jwt-decode"; // npm install jwt-decode
+
 
 // Create Axios instance
 const apiClient = axios.create({
-  baseURL: "https://bindass-backend.vercel.app/api",
-  // baseURL: "http://192.168.29.193:5000/api",
+  // baseURL: "https://bindass-backend.vercel.app/api",
+  baseURL: "http://192.168.1.103:5002/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -16,6 +18,28 @@ apiClient.interceptors.request.use((config) => {
   console.log(token);
   return config;
 });
+
+
+export const getLoggedInUserId = () => {
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) return null;
+
+    const decoded = jwtDecode(token);
+    return decoded?.id || decoded?._id || null;
+  } catch (error) {
+    console.error("Token decode failed:", error);
+    return null;
+  }
+};
+
+export const getUserRole = () => {
+  if (typeof window === "undefined") return null;
+
+  const role = localStorage.getItem("userRole");
+  return role || null;
+};
+
 
 // Example login call
 export const loginUser = async (email, password) => {
@@ -115,14 +139,24 @@ export const getUserProfile = async () => {
   }
 };
 
+export const getUserGiveawayHistoryByID = async (userId) => {
+  try {
+   const res = await apiClient.get(`/giveaways/history/${userId}`);
+  return res.data;
+  } catch (err) {
+    console.error("Error while fetching User Giveaway Histroty By ID:", err.response?.data || err.message);
+    throw err;
+  }
+};
+
 // api/apiClient.js
 
 export const participateInGiveaway = async ({ giveawayId, transactionId }) => {
+  console.log("Sending participation request:", {
+    giveawayId,
+    transactionId,
+  });
   try {
-    console.log("Sending participation request:", {
-      giveawayId,
-      transactionId,
-    });
 
     const res = await apiClient.post("/giveaways/participate", {
       giveawayId,
