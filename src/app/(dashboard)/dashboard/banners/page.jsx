@@ -28,7 +28,7 @@ export default function BannerListPage() {
 
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  
+
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     const allowedFormats = ["image/jpeg", "image/png", "image/jpg"];
@@ -81,6 +81,9 @@ export default function BannerListPage() {
       setPreviewUrl(null);
       toast.success("Banner uploaded successfully");
       setOpen(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to upload banner.");
       toast.error("Failed to upload Banner");
@@ -97,6 +100,9 @@ export default function BannerListPage() {
       setSelectedBanner(null);
       toast.success("Banner Deleted Successfully");
       setConfirmOpen(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
     } catch (err) {
       toast.error("Failed to delete Banner");
     }
