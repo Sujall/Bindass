@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import apiClient from "@/api/apiClient";
 
 function StatsCards({ stats }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-6 rounded-full">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6 rounded-full">
       {stats.map(({ id, title, value }) => (
         <div
           key={id}
-          className="bg-white p-6 rounded shadow-md flex flex-col items-center justify-center"
+          className="bg-white p-6 rounded shadow-md flex flex-col items-center justify-center border border-black/15"
         >
           <h3 className="text-lg font-semibold text-gray-700 mb-2">{title}</h3>
           <p className="text-3xl font-bold text-blue-600">{value}</p>
@@ -19,42 +20,43 @@ function StatsCards({ stats }) {
 }
 
 export default function HomePage() {
-  const [bannerImage, setBannerImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        setError("Image size should be less than 2MB.");
-        setBannerImage(null);
-        setPreviewUrl(null);
-        return;
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const [giveawayRes, bannerRes] = await Promise.all([
+          apiClient.get("/admin/view-giveaway"),
+          apiClient.get("/admin/media/banner"),
+        ]);
+
+        const giveaways = giveawayRes.data.giveaways || [];
+        const banners = bannerRes.data.banners || [];
+
+        const totalGiveaways = giveaways.length;
+
+        const now = new Date();
+        const liveGiveaways = giveaways.filter(g => new Date(g.endDate) > now).length;
+
+        const computedStats = [
+          { id: 1, title: "Total Number of Giveaways", value: totalGiveaways },
+          { id: 3, title: "Live Giveaways", value: liveGiveaways },
+          { id: 4, title: "Banners", value: banners.length },
+        ];
+
+        setStats(computedStats);
+      } catch (err) {
+        console.error("Failed to fetch dashboard stats:", err);
+        setError("Something went wrong while loading dashboard data.");
+      } finally {
+        setLoading(false);
       }
-      setError("");
-      setBannerImage(file);
-      setPreviewUrl(URL.createObjectURL(file));
     }
-  };
 
-  const handleUpload = () => {
-    if (!bannerImage) {
-      alert("Please select an image first.");
-      return;
-    }
-    // Placeholder for real upload logic
-    console.log("Uploading image...", bannerImage);
-    alert("Banner uploaded successfully (simulation).");
-  };
-
-  // Example stats (replace with real data)
-  const giveawayStats = [
-    { id: 1, title: "Total Number of Giveaways", value: 128 },
-    { id: 2, title: "Avg Giveaway Participants", value: 347 },
-    { id: 3, title: "Live Giveaways", value: 15 },
-    { id: 4, title: "Banners", value: 5 },
-  ];
+    fetchStats();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen p-6">
@@ -67,8 +69,13 @@ export default function HomePage() {
         stats, quick links, or recent activity.
       </p>
 
-      {/* Stats Cards Section */}
-      <StatsCards stats={giveawayStats} />
+      {loading ? (
+        <div className="text-gray-500">Loading stats...</div>
+      ) : error ? (
+        <div className="text-red-500">{error}</div>
+      ) : (
+        <StatsCards stats={stats} />
+      )}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import axios from "axios";
 import {jwtDecode} from "jwt-decode"; // npm install jwt-decode
 
-
 // Create Axios instance
 const apiClient = axios.create({
   baseURL: "https://bindass-backend.vercel.app/api",
