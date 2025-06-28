@@ -75,7 +75,7 @@ export default function Terms() {
           <h2 className="text-lg font-semibold text-gray-800 mb-2">9. Contact Information</h2>
           <p className="text-sm text-gray-700">
             For any questions regarding these terms, please email us at{" "}
-            <span className="text-blue-600 font-medium">support@Bindaas.com</span>.
+            <span className="text-blue-600 font-medium">bindaaspay@gmail.com</span>.
           </p>
         </section>
       </div>

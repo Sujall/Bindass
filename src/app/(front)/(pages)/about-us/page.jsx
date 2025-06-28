@@ -66,7 +66,7 @@ export default function AboutPage() {
             Have questions or need support? Reach out to our team at:
             <br />
             <span className="text-blue-600 font-medium">
-              support@Bindaas.com
+              bindaaspay@gmail.com
             </span>
           </p>
         </section>
