@@ -11,6 +11,7 @@ import {
   participateInGiveaway,
 } from "@/api/apiClient";
 import { toast } from "sonner";
+import CountdownTimer from "@/app/(front)/components/CountDown";
 
 // The main page component
 const GiveawayDetailPage = () => {
@@ -95,10 +96,7 @@ const GiveawayDetailPage = () => {
             {current}/{total} entries
           </span>
         </div>
-        <div className="flex items-center gap-1">
-          <FaClock />
-          <span>{new Date(item.endDate).toLocaleString()}</span>
-        </div>
+        <CountdownTimer endDate={item.endDate} />
       </div>
 
       {/* Tabs */}

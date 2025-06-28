@@ -59,7 +59,10 @@ export function ParticipantDialog({ giveaway }) {
         existingIds: participants.map((p) => p.userId._id),
       });
       toast.success(`${updated.userId.fullName} marked as ${status}.`);
-      // setOpen(false);
+      setOpen(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
     } catch (err) {
       console.error("Status update error:", err);
       toast.error("Failed to update participant status.");

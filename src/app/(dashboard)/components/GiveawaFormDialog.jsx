@@ -108,6 +108,9 @@ export function GiveawayFormDialog() {
       toast.success("Giveaway created successfully!");
       resetAll();
       setOpen(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
     } catch (err) {
       console.error("Giveaway submission failed:", err);
       toast.error("Failed to create giveaway. Check your input.");

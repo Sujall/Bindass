@@ -98,6 +98,10 @@ export function WinnerDialog({ giveaway, winners, setWinners }) {
       toast.success("Winners marked and notified successfully!");
       setOpen(false);
 
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
+
       // Update frontend state
       setWinners((prev) => ({
         ...prev,
@@ -162,24 +166,22 @@ export function WinnerDialog({ giveaway, winners, setWinners }) {
             </div>
           )}
 
-          {!winnersFinalized && (
-            <Button
-              onClick={handleSubmitWinners}
-              className="bg-green-600 text-white hover:bg-green-700 mt-4"
-              disabled={
-                submitting || selectedWinners.length === 0 || winnersFinalized
-              }
-            >
-              {submitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Submitting...
-                </>
-              ) : (
-                "Mark as Winner"
-              )}
-            </Button>
-          )}
+          <Button
+            onClick={handleSubmitWinners}
+            className="bg-green-600 text-white hover:bg-green-700 mt-4"
+            disabled={
+              submitting || selectedWinners.length === 0 || winnersFinalized
+            }
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Submitting...
+              </>
+            ) : (
+              "Mark as Winner"
+            )}
+          </Button>
 
           {winnersFinalized && (
             <p className="text-sm text-green-600 font-medium mt-2 text-center">
