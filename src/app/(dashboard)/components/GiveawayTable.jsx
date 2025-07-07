@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ParticipantDialog } from "./ParticipantDialog";
 import { WinnerDialog } from "./WinnerDialog";
 import apiClient from "@/api/apiClient";
+import DeleteGiveaway from "./DeleteGiveaway";
 
 export function GiveawayTable({ winners, setWinners }) {
   const [giveaways, setGiveaways] = useState([]);
@@ -70,7 +71,9 @@ export function GiveawayTable({ winners, setWinners }) {
                   setWinners={setWinners}
                 />
               </td>
-              <td className="px-6 py-4">Delete</td>
+              <td className="px-6 py-4">
+                <DeleteGiveaway giveawayId={giveaway._id} />
+              </td>
             </tr>
           ))}
         </tbody>
