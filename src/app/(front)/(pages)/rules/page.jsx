@@ -84,7 +84,7 @@ export default function RulesPage() {
           <h2 className="text-base font-semibold text-gray-800 mb-1">10. Contact Us</h2>
           <p className="text-sm text-gray-700">
             Questions about rules or disputes? Reach us at:{" "}
-            <span className="text-blue-600 font-medium">support@Bindaas.com</span>
+            <span className="text-blue-600 font-medium">bindaaspay@gmail.com</span>
           </p>
         </section>
       </div>
