@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner"; // ✅ updated toast
 import { Loader2 } from "lucide-react";
 
-export function ParticipantDialog({ giveaway }) {
+export function ParticipantDialog({ giveaway, numberOfParticipants }) {
   const [open, setOpen] = useState(false);
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -77,7 +77,7 @@ export function ParticipantDialog({ giveaway }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">View Participants</Button>
+        <Button variant="outline">View Participants <span className="bg-amber-200 px-2 rounded-full">{numberOfParticipants}</span></Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl">
         <DialogTitle>Participants for "{giveaway.title}"</DialogTitle>

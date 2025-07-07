@@ -27,7 +27,8 @@ export function GiveawayTable({ winners, setWinners }) {
     fetchGiveaways();
   }, []);
 
-  if (loading) return <div className="p-6 flex justify-center">Loading giveaways...</div>;
+  if (loading)
+    return <div className="p-6 flex justify-center">Loading giveaways...</div>;
   if (error) return <div className="p-6 text-red-600">{error}</div>;
 
   return (
@@ -40,20 +41,27 @@ export function GiveawayTable({ winners, setWinners }) {
             <th className="px-6 py-3">Total Seats</th>
             <th className="px-6 py-3">End Date</th>
             <th className="px-6 py-3">Participants</th>
-            <th className="px-6 py-3 text-right">Actions</th>
             <th className="px-6 py-3 text-right">Make Winner</th>
+            <th className="px-6 py-3 text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
           {giveaways.map((giveaway) => (
-            <tr key={giveaway._id} className="border-t hover:bg-gray-50 transition">
+            <tr
+              key={giveaway._id}
+              className="border-t hover:bg-gray-50 transition"
+            >
               <td className="px-6 py-4 font-medium">{giveaway.title}</td>
               <td className="px-6 py-4">₹{giveaway.fee}</td>
               <td className="px-6 py-4">{giveaway.totalSlots}</td>
-              <td className="px-6 py-4">{new Date(giveaway.endDate).toLocaleString()}</td>
-              <td className="px-6 py-4">{giveaway.participants?.length || 0}</td>
+              <td className="px-6 py-4">
+                {new Date(giveaway.endDate).toLocaleString()}
+              </td>
               <td className="px-6 py-4 text-right">
-                <ParticipantDialog giveaway={giveaway} />
+                <ParticipantDialog
+                  giveaway={giveaway}
+                  numberOfParticipants={giveaway.participants?.length || 0}
+                />
               </td>
               <td className="px-6 py-4 text-right">
                 <WinnerDialog
@@ -62,6 +70,7 @@ export function GiveawayTable({ winners, setWinners }) {
                   setWinners={setWinners}
                 />
               </td>
+              <td className="px-6 py-4">Delete</td>
             </tr>
           ))}
         </tbody>
